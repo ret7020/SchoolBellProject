@@ -5,10 +5,11 @@ import time
 
 class TimeController:
     def __init__(self, dbm):
-        self.update_timetable(dbm)
+        self.dbm = dbm
+        self.update_timetable()
 
-    def update_timetable(self, dbm):
-        self.timetable = dbm.get_timetable()
+    def update_timetable(self):
+        self.timetable = self.dbm.get_timetable()
 
     def check_loop(self, aud):
         while True:

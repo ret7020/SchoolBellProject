@@ -12,4 +12,3 @@ if __name__ == "__main__":
     threading.Thread(target=lambda: tm.check_loop(aud)).start()
     cli = CLI()
     cli.controller(tm)
-    

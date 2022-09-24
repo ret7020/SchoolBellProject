@@ -4,7 +4,6 @@ class AudioManager:
     def __init__(self):
         pass
 
-
     def ring_bell(self, audio_name):
         playsound(f"./data/rings/{audio_name}")
 
