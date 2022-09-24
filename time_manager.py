@@ -2,16 +2,15 @@ import datetime
 from db_manager import Db
 from audio import AudioManager
 import time
-import threading
 
 class TimeController:
-    def __init__(self):
-        self.update_timetable()
+    def __init__(self, dbm):
+        self.update_timetable(dbm)
 
-    def update_timetable(self):
+    def update_timetable(self, dbm):
         self.timetable = dbm.get_timetable()
 
-    def check_lopp(self):
+    def check_loop(self, aud):
         while True:
             for lesson in self.timetable:
                 current_time_raw = datetime.datetime.now()
@@ -25,4 +24,4 @@ if __name__ == "__main__":
     dbm = Db("./data/db_dev")
     aud = AudioManager()
     tm = TimeController()
-    tm.check_lopp()
+    tm.check_loop()
