@@ -15,6 +15,7 @@ class CLI:
             else:
                 continue
             if cmd == "tbs":
+                print(f"Current time: {datetime.datetime.now()}")
                 for lessons_counter in range(len(tm.timetable)):
                     lesson_finish = datetime.datetime.strptime(tm.timetable[lessons_counter][2], "%H:%M")
                     lesson_going_now = ""
@@ -29,7 +30,6 @@ class CLI:
                             break_finish = next_lesson_start.time()
                             if break_start <= datetime.datetime.now().time() < break_finish:
                                 break_going_now = colored("NOW", "green")
-
                         print(f"Break {int((next_lesson_start - lesson_finish).seconds / 60)} minutes {break_going_now}")
                     except IndexError:
                         pass
