@@ -9,9 +9,9 @@ Clone this repository to your Raspberry PI</br>
 ```
 git clone https://github.com/ret7020/SchoolBellProject
 ```
-Start the installer</br>
+Start the installer(WITH ROOT PRIVILAGES)</br>
 ```
-./installer.sh
+sudo ./installer.sh
 ```
 Run project</br>
 ```

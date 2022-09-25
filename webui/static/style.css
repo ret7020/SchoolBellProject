@@ -1,0 +1,28 @@
+body{
+    font-family: 'Ubuntu', serif;
+    background-color: #f4f3f8;
+}
+.lesson-block{
+    border-radius: 10px;
+    background-color: #ffff;
+    padding: 10px 10px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+.lesson-block:hover{
+   background-color: #e2dfdf;
+}
+.lesson-heading{
+    font-size: 20px;
+}
+.lesson-time{
+    margin-top: 6px;
+}
+.lesson-time-text{
+    color: #7B819B;
+}
+.break-block{
+    margin-bottom: 10px;
+    font-size: 17px;
+    color: #7B819B;
+}

@@ -7,10 +7,10 @@ from web import WebUI
 
 
 if __name__ == "__main__":
-    dbm = Db("./data/db_dev")
+    dbm = Db("./data/db")
     aud = AudioManager()
     tm = TimeController(dbm)
-    web = WebUI(__name__)
+    web = WebUI(__name__, dbm, tm)
     threading.Thread(target=lambda: tm.check_loop(aud)).start()
     threading.Thread(target=lambda: web.run()).start()
     cli = CLI()
