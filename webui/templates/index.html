@@ -1,42 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Настройка звонков</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css"
+        href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin">
     <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+
 
 </head>
+
 <body>
     <div class="container">
         <h1 class="text-center">Корпус {{building_number}}</h1>
+        <div class="row toolbar">
+            <div style="display: inline-block;">
+                <i class="fa-solid fa-table toolbar-icon" title="Расписание" data-bs-toggle="modal"
+                    data-bs-target="#timetableModal"></i>
+                <i class="fa-solid fa-music toolbar-icon" data-bs-toggle="modal" data-bs-target="#melodiesModal" title="Мелодии"></i>
+                <i class="fa-solid fa-cog toolbar-icon" title="Настройки" data-bs-toggle="modal" data-bs-target="#settingsModal"></i>
+            </div>
+
+        </div>
         {% for lesson in timetable %}
-            <div class="row lesson-block">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <span class="lesson-heading">Урок {{lesson[0]}}</span>
-                    </div>
-                    <div class="lesson-time">
-                        <span class="lesson-time-text">{{lesson[1]}} - {{lesson[2]}}</span>
-                    </div>
+        <div class="row lesson-block">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <span class="lesson-heading">Урок {{lesson[0]}}</span>
+                </div>
+                <div class="lesson-time">
+                    <span class="lesson-time-text">{{lesson[1]}} - {{lesson[2]}}</span>
                 </div>
             </div>
-            {% if lesson[0] != lessons_cnt %}
-                <div class="row break-block">
-                    <div class="d-flex justify-content-between">
-                        <span>Перемена {{lesson[3]}} минут</span>
-                </div>
-                </div>
-            {% endif %}
+        </div>
+        {% if lesson[0] != lessons_cnt %}
+        <div class="row break-block">
+            <div class="d-flex justify-content-between">
+                <span>Перемена {{lesson[3]}} минут</span>
+            </div>
+        </div>
+        {% endif %}
         {% endfor %}
 
-        <!---->
-
-        
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+    <div class="modal fade" id="timetableModal" tabindex="-1" aria-labelledby="timetableModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="timetableModalLabel">Расписание</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/api/update_timetable">
+                        <textarea class="form-control" name="timetable-raw"></textarea>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-primary">Применить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="melodiesModal" tabindex="-1" aria-labelledby="melodiesModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="melodiesModalLabel">Мелодии</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Ок</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="settingsModalLabel">Настройки</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-primary">Применить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+        crossorigin="anonymous"></script>
+    <script src="/static/index.js"></script>
 </body>
+
 </html>

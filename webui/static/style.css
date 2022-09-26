@@ -26,3 +26,17 @@ body{
     font-size: 17px;
     color: #7B819B;
 }
+.toolbar{
+    margin-bottom: 10px;
+    margin-left: 5px;
+    
+}
+.toolbar-icon{
+    font-size: 1.5em;
+    cursor: pointer;
+    color: #0d6efd;
+    margin-right: 5px;
+}
+.toolbar-icon:hover{
+    color: #004dbf;
+}

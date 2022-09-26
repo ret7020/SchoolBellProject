@@ -30,7 +30,7 @@ class WebUI:
                 break_finish = datetime.datetime.strptime(self.tm.timetable[lessons_counter + 1][1], "%H:%M")
                 time_table_display.append((lessons_counter + 1, self.tm.timetable[lessons_counter][1], self.tm.timetable[lessons_counter][2], int((break_finish - break_start).seconds / 60)))
             except IndexError:
-                pass
+                time_table_display.append((lessons_counter + 1, self.tm.timetable[lessons_counter][1], self.tm.timetable[lessons_counter][2], 0))
         lessons_cnt = len(time_table_display)
         return render_template('index.html', building_number=config["building_number"], timetable=time_table_display, lessons_cnt=lessons_cnt)
 
