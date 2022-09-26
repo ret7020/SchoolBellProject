@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 
-
 </head>
 
 <body>
@@ -57,13 +56,14 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/api/update_timetable">
-                        <textarea class="form-control" name="timetable-raw"></textarea>
+                    <form action="/api/update_timetable" id="update_timetable_form">
+                        <label for="timetable-raw" class="form-label" style="font-weight: bold;">Уроки</label>
+                        <textarea class="form-control" name="timetable-raw" id="timetable-raw-times" oninput="auto_grow(this)"></textarea>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                    <button type="button" class="btn btn-primary">Применить</button>
+                    <button type="submit" class="btn btn-primary" form="update_timetable_form">Применить</button>
                 </div>
             </div>
         </div>
@@ -108,6 +108,7 @@
         integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
         crossorigin="anonymous"></script>
     <script src="/static/index.js"></script>
+    <script src="/static/api.js"></script>
 </body>
 
 </html>

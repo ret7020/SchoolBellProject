@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify, request
 import logging
 import datetime
 
@@ -20,6 +20,14 @@ class WebUI:
         @self.app.route('/')
         def __index():
             return self.index()
+
+        @self.app.route('/api/get_timetable')
+        def __get_timetable():
+            return self.get_timetable()
+
+        @self.app.route('/api/update_timetable', methods=['POST'])
+        def __update_timetable():
+            return self.update_timetable()
     
     def index(self):
         config = self.dbm.get_config()
@@ -33,7 +41,30 @@ class WebUI:
                 time_table_display.append((lessons_counter + 1, self.tm.timetable[lessons_counter][1], self.tm.timetable[lessons_counter][2], 0))
         lessons_cnt = len(time_table_display)
         return render_template('index.html', building_number=config["building_number"], timetable=time_table_display, lessons_cnt=lessons_cnt)
+    
+    def get_timetable(self):
+        tm_formatted = ''
+        for lesson in self.tm.timetable:
+            tm_formatted += f"{lesson[1]}\n"
+        return jsonify({"status": True, "timetable": tm_formatted, "heights_px": len(self.tm.timetable) * 30})
 
+    def update_timetable(self):
+        new_timetable_lessons = request.form.get("timetable-raw")
+        new_tmtb = []
+        for lesson_start_time in new_timetable_lessons.split("\n"):
+            lesson_start_time = lesson_start_time.rstrip()
+            if len(lesson_start_time) > 1:
+                try:
+                    lesson_strt = datetime.datetime.strptime(lesson_start_time, "%H:%M")
+                    lesson_finish = lesson_strt + datetime.timedelta(minutes=45)
+                    
+                    #print(lesson_start_time, lesson_finish.strftime("%H:%M"))
+                    new_tmtb.append((lesson_start_time, lesson_finish.strftime("%H:%M")))
+                except ValueError: # Skip invalid time format. This exception can be raised from datetime.datetime.strptime
+                    pass
+        self.dbm.update_timetable(new_tmtb)
+
+        return jsonify({"status": True, "newtimetable": new_tmtb})
     
     def run(self):
         self.app.run(host=self.host, port=self.port)
