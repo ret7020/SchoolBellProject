@@ -32,6 +32,10 @@ class Db:
         self.connection.commit()
         self.tm.update_timetable()
 
+    def get_lesson(self, lesson_id):
+        dt = self.cursor.execute('SELECT * FROM `timetable` WHERE `id` = ?', (lesson_id, )).fetchone()
+        return dt
+
 if __name__ == "__main__":
     print("[DEBUG] Testing db manager library")
     dbm = Db()

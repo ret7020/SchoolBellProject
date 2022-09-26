@@ -24,14 +24,15 @@
                     data-bs-target="#timetableModal"></i>
                 <i class="fa-solid fa-music toolbar-icon" data-bs-toggle="modal" data-bs-target="#melodiesModal" title="Мелодии"></i>
                 <i class="fa-solid fa-cog toolbar-icon" title="Настройки" data-bs-toggle="modal" data-bs-target="#settingsModal"></i>
+                <i class="fa-solid fa-arrows-rotate toolbar-icon" title="Обновить расписание(Hard refresh)" onclick="window.location.href='/api/hard_refresh'"></i>
             </div>
 
         </div>
         {% for lesson in timetable %}
-        <div class="row lesson-block">
+        <div class="row lesson-block" data-bs-toggle="modal" data-bs-target="#editLessonModal" data-lesson_id="{{lesson[0]}}">
             <div class="d-flex justify-content-between">
                 <div>
-                    <span class="lesson-heading">Урок {{lesson[0]}}</span>
+                    <span class="lesson-heading {% if lesson[4] %} text-success {% endif %}">Урок {{lesson[0]}} </span>
                 </div>
                 <div class="lesson-time">
                     <span class="lesson-time-text">{{lesson[1]}} - {{lesson[2]}}</span>
@@ -94,7 +95,47 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    ...
+                    <form action="/api/update_config", method="POST">
+                        <label for="buildingNumber" class="form-label">Номер корпуса</label>
+                        <input type="text" class="form-control" id="buildingNumber" name="bulding-number" placeholder="11">
+
+                        <label for="newPassword" class="form-label">Новый пароль</label>
+                        <input type="text" class="form-control" id="newPassword" name="new-password" placeholder="Оставьте пустым, чтобы не менять пароль">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-primary">Обновить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="editLessonModal" tabindex="-1" aria-labelledby="editLessonModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editLessonModalLabel">Редактировать урок</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/update_lesson" method="POST">
+                        
+                        <label for="lessonStart" class="form-label">Время начала</label>
+                        <input type="text" class="form-control" id="lessonStartInput" name="lesson-start" placeholder="00:00">
+
+                        <label for="lessonFinish" class="form-label">Время окончания</label>
+                        <input type="text" class="form-control" id="lessonFinishInput" name="lesson-finish" placeholder="00:00">
+                        
+                        <label for="melodySelect" class="form-label">Выбор мелодии</label>
+
+                        <select class="form-select" aria-label="Select melody" id="melodySelect">
+                            <option value="1">One</option>
+                        </select>
+                          
+                      
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>

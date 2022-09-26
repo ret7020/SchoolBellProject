@@ -8,6 +8,7 @@ function auto_grow(element) {
 const timetableModal = document.getElementById('timetableModal');
 const melodiesModal = document.getElementById('melodiesModal');
 const settingsModal = document.getElementById('settingsModal');
+const lessonModal = document.getElementById('editLessonModal');
 
 timetableModal.addEventListener('show.bs.modal', event => {
     getReqApi('/api/get_timetable').then(function(resp){
@@ -18,8 +19,17 @@ timetableModal.addEventListener('show.bs.modal', event => {
         }
     });
 });
+lessonModal.addEventListener('show.bs.modal', function(e){
+    document.getElementById('editLessonModalLabel').innerText = `Редактировать урок № ${e.relatedTarget.dataset['lesson_id']}`;
+    getReqApi(`/api/get_lesson_data?lesson_id=${e.relatedTarget.dataset['lesson_id']}`).then(function(resp){
+        document.getElementById('lessonStartInput').value = resp['lesson_start'];
+        document.getElementById('lessonFinishInput').value = resp['lesson_finish'];
+    });
+});
+
 melodiesModal.addEventListener('show.bs.modal', event => {});
 settingsModal.addEventListener('show.bs.modal', event => {});
+
 
 document.getElementById("update_timetable_form").addEventListener('submit', function(e){
     e.preventDefault();

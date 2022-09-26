@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, redirect
 import logging
 import datetime
 
@@ -28,17 +28,33 @@ class WebUI:
         @self.app.route('/api/update_timetable', methods=['POST'])
         def __update_timetable():
             return self.update_timetable()
+        
+        @self.app.route('/api/get_lesson_data')
+        def __get_lesson_data():
+            return self.get_lesson_data()
+
+        @self.app.route('/api/update_lesson')
+        def __update_lesson():
+            return self.update_lesson()
+
+        @self.app.route('/api/hard_refresh')
+        def __hard_refresh():
+            return self.hard_refresh()
     
     def index(self):
         config = self.dbm.get_config()
         time_table_display = []
         for lessons_counter in range(len(self.tm.timetable)):
+            lesson_finish = datetime.datetime.strptime(self.tm.timetable[lessons_counter][2], "%H:%M")
+            going_now = False
+            if datetime.datetime.strptime(self.tm.timetable[lessons_counter][1], "%H:%M").time() <= datetime.datetime.now().time() < lesson_finish.time():
+                going_now = True
             try:
                 break_start = datetime.datetime.strptime(self.tm.timetable[lessons_counter][2], "%H:%M")
                 break_finish = datetime.datetime.strptime(self.tm.timetable[lessons_counter + 1][1], "%H:%M")
-                time_table_display.append((lessons_counter + 1, self.tm.timetable[lessons_counter][1], self.tm.timetable[lessons_counter][2], int((break_finish - break_start).seconds / 60)))
+                time_table_display.append((lessons_counter + 1, self.tm.timetable[lessons_counter][1], self.tm.timetable[lessons_counter][2], int((break_finish - break_start).seconds / 60), going_now))
             except IndexError:
-                time_table_display.append((lessons_counter + 1, self.tm.timetable[lessons_counter][1], self.tm.timetable[lessons_counter][2], 0))
+                time_table_display.append((lessons_counter + 1, self.tm.timetable[lessons_counter][1], self.tm.timetable[lessons_counter][2], 0, going_now))
         lessons_cnt = len(time_table_display)
         return render_template('index.html', building_number=config["building_number"], timetable=time_table_display, lessons_cnt=lessons_cnt)
     
@@ -63,9 +79,20 @@ class WebUI:
                 except ValueError: # Skip invalid time format. This exception can be raised from datetime.datetime.strptime
                     pass
         self.dbm.update_timetable(new_tmtb)
-
         return jsonify({"status": True, "newtimetable": new_tmtb})
     
+    def get_lesson_data(self):
+        lesson_id = int(request.args.get("lesson_id"))
+        dt = self.dbm.get_lesson(lesson_id)
+        return jsonify({"status": True, "lesson_start": dt[1], "lesson_finish": dt[2], "melody_id": dt[3]})
+    
+    def update_lesson(self):
+        return "1"
+
+    def hard_refresh(self):
+        self.tm.update_timetable()
+        return redirect('/')
+
     def run(self):
         self.app.run(host=self.host, port=self.port)
 
