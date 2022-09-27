@@ -28,25 +28,10 @@
             </div>
 
         </div>
-        {% for lesson in timetable %}
-        <div class="row lesson-block" data-bs-toggle="modal" data-bs-target="#editLessonModal" data-lesson_id="{{lesson[0]}}">
-            <div class="d-flex justify-content-between">
-                <div>
-                    <span class="lesson-heading {% if lesson[4] %} text-success {% endif %}">Урок {{lesson[0]}} </span>
-                </div>
-                <div class="lesson-time">
-                    <span class="lesson-time-text">{{lesson[1]}} - {{lesson[2]}}</span>
-                </div>
-            </div>
+        <div id="timetable_area">
+            {{time_table | safe}}
         </div>
-        {% if lesson[0] != lessons_cnt %}
-        <div class="row break-block">
-            <div class="d-flex justify-content-between">
-                <span>Перемена {{lesson[3]}} минут</span>
-            </div>
-        </div>
-        {% endif %}
-        {% endfor %}
+        
 
     </div>
     <div class="modal fade" id="timetableModal" tabindex="-1" aria-labelledby="timetableModalLabel" aria-hidden="true">

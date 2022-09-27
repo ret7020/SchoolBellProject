@@ -36,14 +36,27 @@ document.getElementById("update_timetable_form").addEventListener('submit', func
     e.preventDefault();
     let api_endpoint = this.getAttribute("action");
     var formData = new FormData(document.getElementById("update_timetable_form"));
-    sendForm(api_endpoint, formData);
+    document.getElementById("timetable_area").innerHTML = `<div class="d-flex justify-content-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+</div>`;
+    sendForm(api_endpoint, formData).then(function(resp){
+        document.getElementById("timetable_area").innerHTML = resp["new_time_table"];
+    });
 });
 
 document.getElementById("update_lesson_form").addEventListener('submit', function(e){
     e.preventDefault();
     let api_endpoint = this.getAttribute("action");
     var formData = new FormData(document.getElementById("update_lesson_form"));
+    document.getElementById("timetable_area").innerHTML = `<div class="d-flex justify-content-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+</div>`;
     sendForm(api_endpoint, formData).then(function(resp){
         bootstrap.Modal.getInstance(lessonModal).hide();
+        document.getElementById("timetable_area").innerHTML = resp["new_time_table"];
     });
 });

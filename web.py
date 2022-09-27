@@ -41,9 +41,7 @@ class WebUI:
         def __hard_refresh():
             return self.hard_refresh()
 
-    
-    def index(self):
-        config = self.dbm.get_config()
+    def parse_timetable(self):
         time_table_display = []
         for lessons_counter in range(len(self.tm.timetable)):
             lesson_finish = datetime.datetime.strptime(self.tm.timetable[lessons_counter][2], "%H:%M")
@@ -57,7 +55,12 @@ class WebUI:
             except IndexError:
                 time_table_display.append((lessons_counter + 1, self.tm.timetable[lessons_counter][1], self.tm.timetable[lessons_counter][2], 0, going_now))
         lessons_cnt = len(time_table_display)
-        return render_template('index.html', building_number=config["building_number"], timetable=time_table_display, lessons_cnt=lessons_cnt)
+        return time_table_display, lessons_cnt
+
+    def index(self):
+        config = self.dbm.get_config()
+        time_table_display, lessons_cnt = self.parse_timetable()
+        return render_template('index.html', building_number=config["building_number"], time_table=render_template('lessons.html', timetable=time_table_display, lessons_cnt=lessons_cnt))
     
     def get_timetable(self):
         tm_formatted = ''
@@ -80,7 +83,9 @@ class WebUI:
                 except ValueError: # Skip invalid time format. This exception can be raised from datetime.datetime.strptime
                     pass
         self.dbm.update_timetable(new_tmtb)
-        return jsonify({"status": True, "newtimetable": new_tmtb})
+        self.tm.update_timetable()
+        time_table_display, lessons_cnt = self.parse_timetable()
+        return jsonify({"status": True, "new_time_table": render_template('lessons.html', timetable=time_table_display, lessons_cnt=lessons_cnt)})
     
     def get_lesson_data(self):
         lesson_id = int(request.args.get("lesson_id"))
@@ -89,7 +94,9 @@ class WebUI:
     
     def update_lesson(self):
         self.dbm.update_lesson(int(request.form.get("lesson_id")), request.form.get("lesson-start"), request.form.get("lesson-finish"))
-        return jsonify({"status": True})
+        self.tm.update_timetable()
+        time_table_display, lessons_cnt = self.parse_timetable()
+        return jsonify({"status": True, "new_time_table": render_template('lessons.html', timetable=time_table_display, lessons_cnt=lessons_cnt)})
         
 
     def hard_refresh(self):
