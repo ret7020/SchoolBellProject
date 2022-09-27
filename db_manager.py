@@ -36,6 +36,12 @@ class Db:
         dt = self.cursor.execute('SELECT * FROM `timetable` WHERE `id` = ?', (lesson_id, )).fetchone()
         return dt
 
+    def update_lesson(self, lesson_id, lesson_start, lesson_finish, melody_id=0):
+        dt = self.cursor.execute('UPDATE `timetable` SET `time_start` = ?, `time_finish` = ? WHERE `id` = ?', (lesson_start, lesson_finish, lesson_id))
+        self.connection.commit()
+        self.tm.update_timetable()
+        
+
 if __name__ == "__main__":
     print("[DEBUG] Testing db manager library")
     dbm = Db()

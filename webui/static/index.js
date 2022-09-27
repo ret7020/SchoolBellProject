@@ -24,6 +24,7 @@ lessonModal.addEventListener('show.bs.modal', function(e){
     getReqApi(`/api/get_lesson_data?lesson_id=${e.relatedTarget.dataset['lesson_id']}`).then(function(resp){
         document.getElementById('lessonStartInput').value = resp['lesson_start'];
         document.getElementById('lessonFinishInput').value = resp['lesson_finish'];
+        document.getElementById('update_lesson_id_hidden').value = e.relatedTarget.dataset['lesson_id'];
     });
 });
 
@@ -36,4 +37,13 @@ document.getElementById("update_timetable_form").addEventListener('submit', func
     let api_endpoint = this.getAttribute("action");
     var formData = new FormData(document.getElementById("update_timetable_form"));
     sendForm(api_endpoint, formData);
+});
+
+document.getElementById("update_lesson_form").addEventListener('submit', function(e){
+    e.preventDefault();
+    let api_endpoint = this.getAttribute("action");
+    var formData = new FormData(document.getElementById("update_lesson_form"));
+    sendForm(api_endpoint, formData).then(function(resp){
+        bootstrap.Modal.getInstance(lessonModal).hide();
+    });
 });

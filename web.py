@@ -33,13 +33,14 @@ class WebUI:
         def __get_lesson_data():
             return self.get_lesson_data()
 
-        @self.app.route('/api/update_lesson')
+        @self.app.route('/api/update_lesson', methods=['POST'])
         def __update_lesson():
             return self.update_lesson()
 
         @self.app.route('/api/hard_refresh')
         def __hard_refresh():
             return self.hard_refresh()
+
     
     def index(self):
         config = self.dbm.get_config()
@@ -87,7 +88,9 @@ class WebUI:
         return jsonify({"status": True, "lesson_start": dt[1], "lesson_finish": dt[2], "melody_id": dt[3]})
     
     def update_lesson(self):
-        return "1"
+        self.dbm.update_lesson(int(request.form.get("lesson_id")), request.form.get("lesson-start"), request.form.get("lesson-finish"))
+        return jsonify({"status": True})
+        
 
     def hard_refresh(self):
         self.tm.update_timetable()
