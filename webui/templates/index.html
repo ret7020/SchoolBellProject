@@ -105,7 +105,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/api/update_lesson" method="POST" id="update_lesson_form">
+                    <form action="/api/update_lesson" method="POST" id="update_lesson_form" autocomplete="off">
                         <input type="hidden" name="lesson_id" id="update_lesson_id_hidden">
                         <label for="lessonStart" class="form-label">Время начала</label>
                         <input type="text" class="form-control" id="lessonStartInput" name="lesson-start" placeholder="00:00">
@@ -116,7 +116,7 @@
                         <label for="melodySelect" class="form-label">Выбор мелодии</label>
 
                         <select class="form-select" aria-label="Select melody" id="melodySelect">
-                            <option value="1">One</option>
+                            
                         </select>
                     </form>
                 </div>

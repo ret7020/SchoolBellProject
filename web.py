@@ -90,7 +90,9 @@ class WebUI:
     def get_lesson_data(self):
         lesson_id = int(request.args.get("lesson_id"))
         dt = self.dbm.get_lesson(lesson_id)
-        return jsonify({"status": True, "lesson_start": dt[1], "lesson_finish": dt[2], "melody_id": dt[3]})
+        all_melodies = self.dbm.get_all_melodies()
+        print(dt)
+        return jsonify({"status": True, "lesson_start": dt[1], "lesson_finish": dt[2], "melody_id": dt[3], "all_melodies": render_template('melodies.html', melodies=all_melodies, selected=dt[3])})
     
     def update_lesson(self):
         self.dbm.update_lesson(int(request.form.get("lesson_id")), request.form.get("lesson-start"), request.form.get("lesson-finish"))

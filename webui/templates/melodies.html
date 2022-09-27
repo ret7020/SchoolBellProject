@@ -1,0 +1,3 @@
+{% for melody in melodies %}
+    <option value="{{melody[0]}}" {% if melody[0] == selected %} selected {% endif %}>{{melody[1]}}</option>
+{% endfor %}

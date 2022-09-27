@@ -13,9 +13,6 @@ class Db:
         dt = self.cursor.execute("SELECT * FROM `timetable`").fetchall()
         return dt
 
-    def get_melodies(self):
-        pass
-
     def check_password(self):
         pass
 
@@ -40,9 +37,18 @@ class Db:
         dt = self.cursor.execute('UPDATE `timetable` SET `time_start` = ?, `time_finish` = ? WHERE `id` = ?', (lesson_start, lesson_finish, lesson_id))
         self.connection.commit()
         self.tm.update_timetable()
+
+    def get_all_melodies(self):
+        dt = self.cursor.execute('SELECT * FROM `melodies`').fetchall()
+        return dt
+
+    def add_melody(self, dsiplay_name, filename):
+        pass
+
+    
         
 
 if __name__ == "__main__":
     print("[DEBUG] Testing db manager library")
     dbm = Db()
-    print(dbm.get_config())
+    print(dbm.get_all_melodies())

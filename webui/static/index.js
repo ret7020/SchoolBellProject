@@ -25,6 +25,7 @@ lessonModal.addEventListener('show.bs.modal', function(e){
         document.getElementById('lessonStartInput').value = resp['lesson_start'];
         document.getElementById('lessonFinishInput').value = resp['lesson_finish'];
         document.getElementById('update_lesson_id_hidden').value = e.relatedTarget.dataset['lesson_id'];
+        document.getElementById('melodySelect').innerHTML = resp['all_melodies'];
     });
 });
 
