@@ -1,3 +1,4 @@
 playsound
+PyGObject
 termcolor
 flask

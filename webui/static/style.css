@@ -40,3 +40,9 @@ body{
 .toolbar-icon:hover{
     color: #004dbf;
 }
+.melody_collaps_open_btn{
+    cursor: pointer;
+}
+.melody_collaps_open_btn:hover{
+    background-color: #e2dfdf;
+}

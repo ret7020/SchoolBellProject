@@ -24,6 +24,7 @@
                     data-bs-target="#timetableModal"></i>
                 <i class="fa-solid fa-music toolbar-icon" data-bs-toggle="modal" data-bs-target="#melodiesModal" title="Мелодии"></i>
                 <i class="fa-solid fa-cog toolbar-icon" title="Настройки" data-bs-toggle="modal" data-bs-target="#settingsModal"></i>
+                <i class="fa-solid fa-bell toolbar-icon" title="Проверка звонка" onclick=""></i>
                 <i class="fa-solid fa-arrows-rotate toolbar-icon" title="Обновить расписание(Hard refresh)" onclick="window.location.href='/api/hard_refresh'"></i>
             </div>
 
@@ -63,7 +64,21 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    ...
+                    <i class="fa-solid fa-plus toolbar-icon" title="Добавить" onclick="upload_melody()"></i><span id="melody_upload_status"></span>
+                      
+                    <form action="/api/upload_melody" method="POST" style="display: none;" id="upload_melody_form" enctype=multipart/form-data>
+                        <input type="file" id="uploadMelodyInput" style="display: none" accept=".mp3, .wav" name="melody_file"/>
+                    </form>
+                    <div class="melodies_container">
+                        <ul class="list-group" id="melodies_container_ul">
+                            <div class="d-flex justify-content-center">
+                                <div class="spinner-border" role="status">
+                                  <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>                              
+                        </ul>
+                          
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary">Ок</button>

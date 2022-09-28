@@ -1,9 +1,17 @@
-from flask import Flask, render_template, jsonify, request, redirect
+from flask import Flask, render_template, jsonify, request, redirect, Blueprint
+from werkzeug.utils import secure_filename
 import logging
 import datetime
+import os
+
+
+class MelodiesStorage:
+    def __init__(self):
+        self.blueprint = Blueprint('melodies', __name__, static_url_path='/melodies', static_folder='./data/sounds')
+
 
 class WebUI:
-    def __init__(self, name, dbm, tm, host='0.0.0.0', port='8080'):
+    def __init__(self, name, dbm, tm, melodies_storage, host='0.0.0.0', port='8080', dev_mode=False):
         self.app = Flask(name, template_folder="webui/templates",
                          static_url_path='/static', static_folder='webui/static')
         self.host = host
@@ -13,8 +21,12 @@ class WebUI:
         self.tm = tm
 
         # Disable requests logging
-        log = logging.getLogger('werkzeug')
-        log.setLevel(logging.ERROR)
+        if not dev_mode:
+            log = logging.getLogger('werkzeug')
+            log.setLevel(logging.ERROR)
+
+        # Apply blueprints
+        self.app.register_blueprint(melodies_storage.blueprint)
 
     
         @self.app.route('/')
@@ -36,6 +48,14 @@ class WebUI:
         @self.app.route('/api/update_lesson', methods=['POST'])
         def __update_lesson():
             return self.update_lesson()
+
+        @self.app.route('/api/get_melodies')
+        def __get_melodies():
+            return self.get_melodies()
+
+        @self.app.route('/api/upload_melody', methods=['POST'])
+        def __upload_melody():
+            return self.upload_melody()
 
         @self.app.route('/api/hard_refresh')
         def __hard_refresh():
@@ -91,7 +111,6 @@ class WebUI:
         lesson_id = int(request.args.get("lesson_id"))
         dt = self.dbm.get_lesson(lesson_id)
         all_melodies = self.dbm.get_all_melodies()
-        print(dt)
         return jsonify({"status": True, "lesson_start": dt[1], "lesson_finish": dt[2], "melody_id": dt[3], "all_melodies": render_template('melodies.html', melodies=all_melodies, selected=dt[3])})
     
     def update_lesson(self):
@@ -100,10 +119,27 @@ class WebUI:
         time_table_display, lessons_cnt = self.parse_timetable()
         return jsonify({"status": True, "new_time_table": render_template('lessons.html', timetable=time_table_display, lessons_cnt=lessons_cnt)})
         
+    def get_melodies(self):
+        return jsonify({"status": True, "melodies": self.dbm.get_all_melodies()})
 
+    def check_file_extension(self, filename):
+        return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ['wav', 'mp3']
+
+    
     def hard_refresh(self):
         self.tm.update_timetable()
         return redirect('/')
+
+    def upload_melody(self):
+        if 'melody_file' in request.files:
+            melody_file = request.files['melody_file']
+            if melody_file.filename:
+                if melody_file and self.check_file_extension(melody_file.filename):
+                    filename = secure_filename(melody_file.filename)
+                    melody_file.save(os.path.join("./data/sounds", filename))
+                    return jsonify({"status": True})
+        return jsonify({"status": False})
 
     def run(self):
         self.app.run(host=self.host, port=self.port)

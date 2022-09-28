@@ -28,4 +28,5 @@ Run project</br>
 3. WebUI to edit timetable :heavy_check_mark:
 4. WebUI ability to upload melodies
 5. Adaptive WebUI for smartphones :heavy_check_mark:
-
+6. Bindings to weekdays(DISABLE bell on Saturday and Sunday)
+7. Design as a REST API application with mostly AJAX WebUI as client :heavy_check_mark:
