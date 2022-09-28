@@ -6,7 +6,10 @@ class AudioManager:
         self.sounds_dir_path = sounds_dir_path
 
     def ring_bell(self, audio_name):
-        playsound(os.path.join(self.sounds_dir_path, audio_name))
+        try:
+            playsound(os.path.join(self.sounds_dir_path, audio_name))
+        except:
+            playsound(os.path.join(self.sounds_dir_path, "mp3.mp3"))
 
 if __name__ == "__main__":
     adm = AudioManager()

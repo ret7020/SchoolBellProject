@@ -45,7 +45,7 @@
                 <div class="modal-body">
                     <form action="/api/update_timetable" id="update_timetable_form">
                         <label for="timetable-raw" class="form-label" style="font-weight: bold;">Уроки</label>
-                        <textarea class="form-control" name="timetable-raw" id="timetable-raw-times" oninput="auto_grow(this)"></textarea>
+                        <textarea class="form-control" name="timetable-raw" id="timetable-raw-times" oninput="auto_grow(this)" required></textarea>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -95,17 +95,17 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/api/update_config", method="POST">
+                    <form action="/api/update_config", method="POST" id="update_configuration_form">
                         <label for="buildingNumber" class="form-label">Номер корпуса</label>
-                        <input type="text" class="form-control" id="buildingNumber" name="bulding-number" placeholder="11">
+                        <input type="text" class="form-control" id="buildingNumber" name="building_number" placeholder="11" value="{{building_number}}" required>
 
                         <label for="newPassword" class="form-label">Новый пароль</label>
-                        <input type="text" class="form-control" id="newPassword" name="new-password" placeholder="Оставьте пустым, чтобы не менять пароль">
+                        <input type="text" class="form-control" id="newPassword" name="new_password" placeholder="Оставьте пустым, чтобы не менять пароль">
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                    <button type="button" class="btn btn-primary">Обновить</button>
+                    <button type="submit" form="update_configuration_form" class="btn btn-primary">Обновить</button>
                 </div>
             </div>
         </div>
@@ -123,10 +123,10 @@
                     <form action="/api/update_lesson" method="POST" id="update_lesson_form" autocomplete="off">
                         <input type="hidden" name="lesson_id" id="update_lesson_id_hidden">
                         <label for="lessonStart" class="form-label">Время начала</label>
-                        <input type="text" class="form-control" id="lessonStartInput" name="lesson-start" placeholder="00:00">
+                        <input type="text" class="form-control" id="lessonStartInput" name="lesson-start" placeholder="00:00" required>
 
                         <label for="lessonFinish" class="form-label">Время окончания</label>
-                        <input type="text" class="form-control" id="lessonFinishInput" name="lesson-finish" placeholder="00:00">
+                        <input type="text" class="form-control" id="lessonFinishInput" name="lesson-finish" placeholder="00:00" required>
                         
                         <label for="melodySelect" class="form-label">Выбор мелодии</label>
                         <select class="form-select" aria-label="Select melody" id="melodySelect" name="melodySelect">
@@ -148,6 +148,7 @@
     <script src="/static/index.js"></script>
     <script src="/static/api.js"></script>
     <script src="/static/utils.js"></script>
+
 </body>
 
 </html>

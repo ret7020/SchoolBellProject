@@ -34,7 +34,7 @@ class Db:
         return dt
 
     def update_lesson(self, lesson_id, lesson_start, lesson_finish, melody_id):
-        dt = self.cursor.execute('UPDATE `timetable` SET `time_start` = ?, `time_finish` = ?, `melody_id` = ? WHERE `id` = ?', (lesson_start, lesson_finish, melody_id, lesson_id))
+        self.cursor.execute('UPDATE `timetable` SET `time_start` = ?, `time_finish` = ?, `melody_id` = ? WHERE `id` = ?', (lesson_start, lesson_finish, melody_id, lesson_id))
         self.connection.commit()
         self.tm.update_timetable()
 
@@ -43,12 +43,17 @@ class Db:
         return dt
 
     def add_melody(self, filename, display_name):
-        dt = self.cursor.execute('INSERT INTO "melodies" ("display_name", "filename") VALUES (?, ?)', (display_name, filename))
+        self.cursor.execute('INSERT INTO "melodies" ("display_name", "filename") VALUES (?, ?)', (display_name, filename))
         self.connection.commit()
         return self.cursor.lastrowid
 
     def update_melody_title(self, melody_id, melody_new_name):
-        dt = self.cursor.execute('UPDATE `melodies` SET `display_name` = ? WHERE `id` = ?', (melody_new_name, melody_id))
+        self.cursor.execute('UPDATE `melodies` SET `display_name` = ? WHERE `id` = ?', (melody_new_name, melody_id))
+        self.connection.commit()
+
+    def update_config(self, building_number, new_password):
+        if building_number:
+            self.cursor.execute('UPDATE `config` SET `school_building_num` = ?', (building_number, ))
         self.connection.commit()
 
 if __name__ == "__main__":

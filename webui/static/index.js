@@ -6,7 +6,7 @@ const MELODY_BLOCK = ` <li class="list-group-item melody_collaps_open_btn" data-
             <div class="input-group" style='margin-bottom: 10px'>
                 <span class="input-group-text">Название</span>
                 <input type='hidden' name='melody_id' value='{0}'>
-                <input type="text" aria-label="Title" class="form-control" name='title' value='{1}'>
+                <input type="text" aria-label="Title" class="form-control" name='title' value='{1}' required>
                 <button class="btn btn-outline-primary" type="button" onclick='update_melody_title({0})'>OK</button>
             </div>
         </form>
@@ -74,7 +74,8 @@ melodiesModal.addEventListener('show.bs.modal', function (e) {
 
     });
 });
-settingsModal.addEventListener('show.bs.modal', event => { });
+/*settingsModal.addEventListener('show.bs.modal', function(e){
+});*/
 
 
 document.getElementById("update_timetable_form").addEventListener('submit', function (e) {
@@ -121,3 +122,13 @@ document.getElementById("uploadMelodyInput").addEventListener('input', function 
     });
 });
 
+document.getElementById("update_configuration_form").addEventListener('submit', function (e) {
+    e.preventDefault();
+    let api_endpoint = this.getAttribute("action");
+    var formData = new FormData(document.getElementById("update_configuration_form"));
+    sendForm(api_endpoint, formData).then(function(resp){
+        if (resp["status"]){
+
+        }
+    })
+});

@@ -70,6 +70,10 @@ class WebUI:
         def __manual_bell():
             return self.manual_bell()
 
+        @self.app.route('/api/update_config', methods=['POST'])
+        def __update_config():
+            return self.update_config()
+
     def parse_timetable(self):
         time_table_display = []
         for lessons_counter in range(len(self.tm.timetable)):
@@ -158,6 +162,10 @@ class WebUI:
 
     def manual_bell(self):
         self.aud.ring_bell("mp3.mp3")
+        return jsonify({"status": True})
+
+    def update_config(self):
+        self.dbm.update_config(request.form.get("building_number"), request.form.get("new_password"))
         return jsonify({"status": True})
 
     def run(self):
