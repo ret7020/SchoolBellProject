@@ -57,6 +57,10 @@ class WebUI:
         def __upload_melody():
             return self.upload_melody()
 
+        @self.app.route('/api/update_melody_title', methods=['POST'])
+        def __update_melody_title():
+            return self.update_melody_title()
+
         @self.app.route('/api/hard_refresh')
         def __hard_refresh():
             return self.hard_refresh()
@@ -122,6 +126,11 @@ class WebUI:
     def get_melodies(self):
         return jsonify({"status": True, "melodies": self.dbm.get_all_melodies()})
 
+    def update_melody_title(self):
+        new_title = request.form.get('title')
+        self.dbm.update_melody_title(int(request.form.get('melody_id')), new_title)
+        return jsonify({"status": True, "new_title": new_title})
+
     def check_file_extension(self, filename):
         return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ['wav', 'mp3']
@@ -138,7 +147,8 @@ class WebUI:
                 if melody_file and self.check_file_extension(melody_file.filename):
                     filename = secure_filename(melody_file.filename)
                     melody_file.save(os.path.join("./data/sounds", filename))
-                    return jsonify({"status": True})
+                    melody_id = self.dbm.add_melody(filename, filename)
+                    return jsonify({"status": True, "melody_name": filename, "melody_id": melody_id})
         return jsonify({"status": False})
 
     def run(self):

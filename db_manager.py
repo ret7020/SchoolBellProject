@@ -42,11 +42,14 @@ class Db:
         dt = self.cursor.execute('SELECT * FROM `melodies`').fetchall()
         return dt
 
-    def add_melody(self, dsiplay_name, filename):
-        pass
+    def add_melody(self, filename, display_name):
+        dt = self.cursor.execute('INSERT INTO "melodies" ("display_name", "filename") VALUES (?, ?)', (display_name, filename))
+        self.connection.commit()
+        return self.cursor.lastrowid
 
-    
-        
+    def update_melody_title(self, melody_id, melody_new_name):
+        dt = self.cursor.execute('UPDATE `melodies` SET `display_name` = ? WHERE `id` = ?', (melody_new_name, melody_id))
+        self.connection.commit()
 
 if __name__ == "__main__":
     print("[DEBUG] Testing db manager library")

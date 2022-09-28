@@ -46,3 +46,12 @@ body{
 .melody_collaps_open_btn:hover{
     background-color: #e2dfdf;
 }
+.controll-icon{
+    padding: 5px 10px 5px 10px;
+    cursor: pointer;
+    color: #0d6efd;
+    margin-right: 5px;
+}
+.controll-icon:hover{
+    color: #004dbf;
+}
