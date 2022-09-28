@@ -24,7 +24,7 @@
                     data-bs-target="#timetableModal"></i>
                 <i class="fa-solid fa-music toolbar-icon" data-bs-toggle="modal" data-bs-target="#melodiesModal" title="Мелодии"></i>
                 <i class="fa-solid fa-cog toolbar-icon" title="Настройки" data-bs-toggle="modal" data-bs-target="#settingsModal"></i>
-                <i class="fa-solid fa-bell toolbar-icon" title="Проверка звонка" onclick=""></i>
+                <i class="fa-solid fa-bell toolbar-icon" title="Проверка звонка" onclick="getReqApi('/api/manual_bell')"></i>
                 <i class="fa-solid fa-arrows-rotate toolbar-icon" title="Обновить расписание(Hard refresh)" onclick="window.location.href='/api/hard_refresh'"></i>
             </div>
 
@@ -129,8 +129,7 @@
                         <input type="text" class="form-control" id="lessonFinishInput" name="lesson-finish" placeholder="00:00">
                         
                         <label for="melodySelect" class="form-label">Выбор мелодии</label>
-
-                        <select class="form-select" aria-label="Select melody" id="melodySelect">
+                        <select class="form-select" aria-label="Select melody" id="melodySelect" name="melodySelect">
                             
                         </select>
                     </form>

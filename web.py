@@ -11,7 +11,7 @@ class MelodiesStorage:
 
 
 class WebUI:
-    def __init__(self, name, dbm, tm, melodies_storage, host='0.0.0.0', port='8080', dev_mode=False):
+    def __init__(self, name, dbm, tm, aud, melodies_storage, host='0.0.0.0', port='8080', dev_mode=False):
         self.app = Flask(name, template_folder="webui/templates",
                          static_url_path='/static', static_folder='webui/static')
         self.host = host
@@ -19,6 +19,7 @@ class WebUI:
         self.app.config["TEMPLATES_AUTO_RELOAD"] = True
         self.dbm = dbm
         self.tm = tm
+        self.aud = aud
 
         # Disable requests logging
         if not dev_mode:
@@ -64,6 +65,10 @@ class WebUI:
         @self.app.route('/api/hard_refresh')
         def __hard_refresh():
             return self.hard_refresh()
+
+        @self.app.route('/api/manual_bell')
+        def __manual_bell():
+            return self.manual_bell()
 
     def parse_timetable(self):
         time_table_display = []
@@ -118,7 +123,7 @@ class WebUI:
         return jsonify({"status": True, "lesson_start": dt[1], "lesson_finish": dt[2], "melody_id": dt[3], "all_melodies": render_template('melodies.html', melodies=all_melodies, selected=dt[3])})
     
     def update_lesson(self):
-        self.dbm.update_lesson(int(request.form.get("lesson_id")), request.form.get("lesson-start"), request.form.get("lesson-finish"))
+        self.dbm.update_lesson(int(request.form.get("lesson_id")), request.form.get("lesson-start"), request.form.get("lesson-finish"), int(request.form.get("melodySelect")))
         self.tm.update_timetable()
         time_table_display, lessons_cnt = self.parse_timetable()
         return jsonify({"status": True, "new_time_table": render_template('lessons.html', timetable=time_table_display, lessons_cnt=lessons_cnt)})
@@ -150,6 +155,10 @@ class WebUI:
                     melody_id = self.dbm.add_melody(filename, filename)
                     return jsonify({"status": True, "melody_name": filename, "melody_id": melody_id})
         return jsonify({"status": False})
+
+    def manual_bell(self):
+        self.aud.ring_bell("mp3.mp3")
+        return jsonify({"status": True})
 
     def run(self):
         self.app.run(host=self.host, port=self.port)
