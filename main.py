@@ -11,7 +11,7 @@ if __name__ == "__main__":
     aud = AudioManager(SOUNDS_DIR_PATH)
     tm = TimeController(dbm)
     dbm.update_timemanager(tm)
-    melodies_storage = MelodiesStorage()
+    melodies_storage = MelodiesStorage(SOUNDS_DIR_PATH)
     web = WebUI(__name__, dbm, tm, aud, melodies_storage, host=WEB_HOST, port=WEB_PORT)
     threading.Thread(target=lambda: tm.check_loop(aud)).start()
     threading.Thread(target=lambda: web.run()).start()

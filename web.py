@@ -6,28 +6,31 @@ import os
 
 
 class MelodiesStorage:
-    def __init__(self):
-        self.blueprint = Blueprint('melodies', __name__, static_url_path='/melodies', static_folder='./data/sounds')
+    def __init__(self, path_to_dir='./data/sounds'):
+        self.blueprint = Blueprint('melodies', __name__, static_url_path='/melodies', static_folder=path_to_dir)
 
 
 class WebUI:
     def __init__(self, name, dbm, tm, aud, melodies_storage, host='0.0.0.0', port='8080', dev_mode=False):
         self.app = Flask(name, template_folder="webui/templates",
                          static_url_path='/static', static_folder='webui/static')
+        self.app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000 # 16 Mb max upload
+        self.app.config["TEMPLATES_AUTO_RELOAD"] = True # Auto - reload html/css/sources without server reboot
+
         self.host = host
         self.port = port
-        self.app.config["TEMPLATES_AUTO_RELOAD"] = True
-        self.dbm = dbm
-        self.tm = tm
-        self.aud = aud
+        
+        self.dbm = dbm # Link to database object
+        self.tm = tm # Link to timemanager object
+        self.aud = aud # Link to audio manager object
 
-        # Disable requests logging
+        # Disable requests logging in production mode
         if not dev_mode:
             log = logging.getLogger('werkzeug')
             log.setLevel(logging.ERROR)
 
         # Apply blueprints
-        self.app.register_blueprint(melodies_storage.blueprint)
+        self.app.register_blueprint(melodies_storage.blueprint) # Blueprint for custom melodies location
 
     
         @self.app.route('/')
@@ -36,49 +39,82 @@ class WebUI:
 
         @self.app.route('/api/get_timetable')
         def __get_timetable():
+            '''
+            Get all day timetable data
+            '''
             return self.get_timetable()
 
         @self.app.route('/api/update_timetable', methods=['POST'])
         def __update_timetable():
+            '''
+            Recreate timetable via lessons start times
+            '''
             return self.update_timetable()
         
         @self.app.route('/api/get_lesson_data')
         def __get_lesson_data():
+            '''
+            Get concrete lesson data(time, melody, e.t.c)
+            '''
             return self.get_lesson_data()
 
         @self.app.route('/api/update_lesson', methods=['POST'])
         def __update_lesson():
+            '''
+            Change concrete lesson data(time, melody and e.t.c)
+            '''
             return self.update_lesson()
 
         @self.app.route('/api/get_melodies')
         def __get_melodies():
+            '''
+            Get all uploaded and registered melodies for bell
+            '''
             return self.get_melodies()
 
         @self.app.route('/api/upload_melody', methods=['POST'])
         def __upload_melody():
+            '''
+            Upload and register new melody for bell
+            '''
             return self.upload_melody()
 
         @self.app.route('/api/update_melody_title', methods=['POST'])
         def __update_melody_title():
+            '''
+            Change concrete melody title(display title)
+            '''
             return self.update_melody_title()
 
         @self.app.route('/api/hard_refresh')
         def __hard_refresh():
+            '''
+            Reload timemanager data directly from database
+            '''
             return self.hard_refresh()
 
         @self.app.route('/api/manual_bell')
         def __manual_bell():
+            '''
+            Test bell
+            '''
             return self.manual_bell()
 
         @self.app.route('/api/update_config', methods=['POST'])
         def __update_config():
+            '''
+            Change system configuration
+            '''
             return self.update_config()
 
     def parse_timetable(self):
+        '''
+        Load and process timetable from timemanger
+        '''
         time_table_display = []
-        for lessons_counter in range(len(self.tm.timetable)):
+        for lessons_counter in range(len(self.tm.timetable)): # Iterate over lessons
             lesson_finish = datetime.datetime.strptime(self.tm.timetable[lessons_counter][2], "%H:%M")
-            going_now = False
+            going_now = False # This lesson is going now flag
             break_going_now = False
             if datetime.datetime.strptime(self.tm.timetable[lessons_counter][1], "%H:%M").time() <= datetime.datetime.now().time() < lesson_finish.time():
                 going_now = True
@@ -88,7 +124,7 @@ class WebUI:
                 if not going_now and break_start.time() <= datetime.datetime.now().time() < break_finish.time():
                     break_going_now = True
                 time_table_display.append((lessons_counter + 1, self.tm.timetable[lessons_counter][1], self.tm.timetable[lessons_counter][2], int((break_finish - break_start).seconds / 60), going_now, break_going_now))
-            except IndexError:
+            except IndexError: # Try to locate break after lesson. We will get IndexError after last lesson
                 time_table_display.append((lessons_counter + 1, self.tm.timetable[lessons_counter][1], self.tm.timetable[lessons_counter][2], 0, going_now, break_going_now))
         lessons_cnt = len(time_table_display)
         return time_table_display, lessons_cnt
@@ -100,7 +136,7 @@ class WebUI:
     
     def get_timetable(self):
         tm_formatted = ''
-        for lesson in self.tm.timetable:
+        for lesson in self.tm.timetable: # Format lessons as text like '10:00\n15:00\n20:00\n'
             tm_formatted += f"{lesson[1]}\n"
         return jsonify({"status": True, "timetable": tm_formatted, "heights_px": len(self.tm.timetable) * 30})
 
@@ -112,14 +148,12 @@ class WebUI:
             if len(lesson_start_time) > 1:
                 try:
                     lesson_strt = datetime.datetime.strptime(lesson_start_time, "%H:%M")
-                    lesson_finish = lesson_strt + datetime.timedelta(minutes=45)
-                    
-                    #print(lesson_start_time, lesson_finish.strftime("%H:%M"))
+                    lesson_finish = lesson_strt + datetime.timedelta(minutes=45) # Calculate lesson finish time 
                     new_tmtb.append((lesson_start_time, lesson_finish.strftime("%H:%M")))
                 except ValueError: # Skip invalid time format. This exception can be raised from datetime.datetime.strptime
                     pass
-        self.dbm.update_timetable(new_tmtb)
-        self.tm.update_timetable()
+        self.dbm.update_timetable(new_tmtb) # Save to databse
+        self.tm.update_timetable() # Reload timetable in timemanager
         time_table_display, lessons_cnt = self.parse_timetable()
         return jsonify({"status": True, "new_time_table": render_template('lessons.html', timetable=time_table_display, lessons_cnt=lessons_cnt)})
     

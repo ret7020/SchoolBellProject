@@ -38,3 +38,4 @@ Run project</br>
 5. Adaptive WebUI for smartphones :heavy_check_mark:
 6. Bindings to weekdays(DISABLE bell on Saturday and Sunday)
 7. Design as a REST API application with mostly AJAX WebUI as client :heavy_check_mark:
+8. Create Production Setup
