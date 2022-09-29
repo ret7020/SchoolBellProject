@@ -21,8 +21,8 @@ class TimeController:
                         #print("Bell!!!")
                         aud.ring_bell(lesson[4])
                         time.sleep(61 - datetime.datetime.now().second) # Sleep for one minute after bell rang
-        except:
-            pass
+        except Exception as e:
+            print(e)
 if __name__ == "__main__":
     dbm = Db("./data/db_dev")
     aud = AudioManager()

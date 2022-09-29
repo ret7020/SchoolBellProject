@@ -12,7 +12,7 @@
     {% if lesson[0] != lessons_cnt %}
         <div class="row break-block">
             <div class="d-flex justify-content-between">
-                <span>Перемена {{lesson[3]}} минут</span>
+                <span class="{% if lesson[5] %}text-success{% endif %}">Перемена {{lesson[3]}} минут </span>
             </div>
         </div>
     {% endif %}

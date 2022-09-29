@@ -79,14 +79,17 @@ class WebUI:
         for lessons_counter in range(len(self.tm.timetable)):
             lesson_finish = datetime.datetime.strptime(self.tm.timetable[lessons_counter][2], "%H:%M")
             going_now = False
+            break_going_now = False
             if datetime.datetime.strptime(self.tm.timetable[lessons_counter][1], "%H:%M").time() <= datetime.datetime.now().time() < lesson_finish.time():
                 going_now = True
             try:
                 break_start = datetime.datetime.strptime(self.tm.timetable[lessons_counter][2], "%H:%M")
                 break_finish = datetime.datetime.strptime(self.tm.timetable[lessons_counter + 1][1], "%H:%M")
-                time_table_display.append((lessons_counter + 1, self.tm.timetable[lessons_counter][1], self.tm.timetable[lessons_counter][2], int((break_finish - break_start).seconds / 60), going_now))
+                if not going_now and break_start.time() <= datetime.datetime.now().time() < break_finish.time():
+                    break_going_now = True
+                time_table_display.append((lessons_counter + 1, self.tm.timetable[lessons_counter][1], self.tm.timetable[lessons_counter][2], int((break_finish - break_start).seconds / 60), going_now, break_going_now))
             except IndexError:
-                time_table_display.append((lessons_counter + 1, self.tm.timetable[lessons_counter][1], self.tm.timetable[lessons_counter][2], 0, going_now))
+                time_table_display.append((lessons_counter + 1, self.tm.timetable[lessons_counter][1], self.tm.timetable[lessons_counter][2], 0, going_now, break_going_now))
         lessons_cnt = len(time_table_display)
         return time_table_display, lessons_cnt
 
