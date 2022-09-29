@@ -33,8 +33,8 @@ class Db:
         dt = self.cursor.execute('SELECT * FROM `timetable` WHERE `id` = ?', (lesson_id, )).fetchone()
         return dt
 
-    def update_lesson(self, lesson_id, lesson_start, lesson_finish, melody_id):
-        self.cursor.execute('UPDATE `timetable` SET `time_start` = ?, `time_finish` = ?, `melody_id` = ? WHERE `id` = ?', (lesson_start, lesson_finish, melody_id, lesson_id))
+    def update_lesson(self, lesson_id, lesson_start, lesson_finish, melody_id, saturday_work=False, sunday_work=False):
+        self.cursor.execute('UPDATE `timetable` SET `time_start` = ?, `time_finish` = ?, `melody_id` = ?, `saturday_work` = ?, `sunday_work` = ? WHERE `id` = ?', (lesson_start, lesson_finish, melody_id, saturday_work == "1", sunday_work == "1", lesson_id))
         self.connection.commit()
         self.tm.update_timetable()
 

@@ -60,6 +60,8 @@ lessonModal.addEventListener('show.bs.modal', function (e) {
         document.getElementById('lessonFinishInput').value = resp['lesson_finish'];
         document.getElementById('update_lesson_id_hidden').value = e.relatedTarget.dataset['lesson_id'];
         document.getElementById('melodySelect').innerHTML = resp['all_melodies'];
+        document.getElementById("work_at_saturday").checked = resp["saturday_work"];
+        document.getElementById("work_at_sunday").checked = resp["sunday_work"];
     });
 });
 

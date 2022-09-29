@@ -17,9 +17,12 @@ class TimeController:
                 for lesson in self.timetable:
                     current_time_raw = datetime.datetime.now()
                     current_time_fr = current_time_raw.strftime("%H:%M")
+                    weekday = current_time_raw.weekday()
+                    #weekday = 5 # for test
                     if lesson[1] == current_time_fr or lesson[2] == current_time_fr:
-                        #print("Bell!!!")
-                        aud.ring_bell(lesson[4])
+                        if (weekday == 5 and not lesson[4]) or (weekday == 6 and not lesson[5]): # Skip Sunday or Saturday bell
+                            continue
+                        aud.ring_bell(lesson[6])
                         time.sleep(61 - datetime.datetime.now().second) # Sleep for one minute after bell rang
         except Exception as e:
             print(e)
