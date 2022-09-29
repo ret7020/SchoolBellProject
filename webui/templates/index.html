@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
     <meta charset="UTF-8">
@@ -22,17 +22,21 @@
             <div style="display: inline-block;">
                 <i class="fa-solid fa-table toolbar-icon" title="Расписание" data-bs-toggle="modal"
                     data-bs-target="#timetableModal"></i>
-                <i class="fa-solid fa-music toolbar-icon" data-bs-toggle="modal" data-bs-target="#melodiesModal" title="Мелодии"></i>
-                <i class="fa-solid fa-cog toolbar-icon" title="Настройки" data-bs-toggle="modal" data-bs-target="#settingsModal"></i>
-                <i class="fa-solid fa-bell toolbar-icon" title="Проверка звонка" onclick="getReqApi('/api/manual_bell')"></i>
-                <i class="fa-solid fa-arrows-rotate toolbar-icon" title="Обновить расписание(Hard refresh)" onclick="window.location.href='/api/hard_refresh'"></i>
+                <i class="fa-solid fa-music toolbar-icon" data-bs-toggle="modal" data-bs-target="#melodiesModal"
+                    title="Мелодии"></i>
+                <i class="fa-solid fa-cog toolbar-icon" title="Настройки" data-bs-toggle="modal"
+                    data-bs-target="#settingsModal"></i>
+                <i class="fa-solid fa-bell toolbar-icon" title="Проверка звонка"
+                    onclick="getReqApi('/api/manual_bell')"></i>
+                <i class="fa-solid fa-arrows-rotate toolbar-icon" title="Обновить расписание(Hard refresh)"
+                    onclick="window.location.href='/api/hard_refresh'"></i>
             </div>
 
         </div>
         <div id="timetable_area">
             {{time_table | safe}}
         </div>
-        
+
 
     </div>
     <div class="modal fade" id="timetableModal" tabindex="-1" aria-labelledby="timetableModalLabel" aria-hidden="true">
@@ -45,7 +49,8 @@
                 <div class="modal-body">
                     <form action="/api/update_timetable" id="update_timetable_form">
                         <label for="timetable-raw" class="form-label" style="font-weight: bold;">Уроки</label>
-                        <textarea class="form-control" name="timetable-raw" id="timetable-raw-times" oninput="auto_grow(this)" required></textarea>
+                        <textarea class="form-control" name="timetable-raw" id="timetable-raw-times"
+                            oninput="auto_grow(this)" required></textarea>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -64,20 +69,23 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <i class="fa-solid fa-plus toolbar-icon" title="Добавить" onclick="upload_melody()"></i><span id="melody_upload_status"></span>
-                      
-                    <form action="/api/upload_melody" method="POST" style="display: none;" id="upload_melody_form" enctype=multipart/form-data>
-                        <input type="file" id="uploadMelodyInput" style="display: none" accept=".mp3, .wav" name="melody_file"/>
+                    <i class="fa-solid fa-plus toolbar-icon" title="Добавить" onclick="upload_melody()"></i><span
+                        id="melody_upload_status"></span>
+
+                    <form action="/api/upload_melody" method="POST" style="display: none;" id="upload_melody_form"
+                        enctype=multipart/form-data>
+                        <input type="file" id="uploadMelodyInput" style="display: none" accept=".mp3, .wav"
+                            name="melody_file" />
                     </form>
                     <div class="melodies_container">
                         <ul class="list-group" id="melodies_container_ul">
                             <div class="d-flex justify-content-center">
                                 <div class="spinner-border" role="status">
-                                  <span class="visually-hidden">Loading...</span>
+                                    <span class="visually-hidden">Loading...</span>
                                 </div>
-                            </div>                              
+                            </div>
                         </ul>
-                          
+
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -95,12 +103,14 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/api/update_config", method="POST" id="update_configuration_form">
+                    <form action="/api/update_config" , method="POST" id="update_configuration_form">
                         <label for="buildingNumber" class="form-label">Номер корпуса</label>
-                        <input type="text" class="form-control" id="buildingNumber" name="building_number" placeholder="11" value="{{building_number}}" required>
+                        <input type="text" class="form-control" id="buildingNumber" name="building_number"
+                            placeholder="11" value="{{building_number}}" required>
 
                         <label for="newPassword" class="form-label">Новый пароль</label>
-                        <input type="text" class="form-control" id="newPassword" name="new_password" placeholder="Оставьте пустым, чтобы не менять пароль">
+                        <input type="text" class="form-control" id="newPassword" name="new_password"
+                            placeholder="Оставьте пустым, чтобы не менять пароль">
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -112,7 +122,8 @@
     </div>
 
 
-    <div class="modal fade" id="editLessonModal" tabindex="-1" aria-labelledby="editLessonModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editLessonModal" tabindex="-1" aria-labelledby="editLessonModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -123,29 +134,33 @@
                     <form action="/api/update_lesson" method="POST" id="update_lesson_form" autocomplete="off">
                         <input type="hidden" name="lesson_id" id="update_lesson_id_hidden">
                         <label for="lessonStart" class="form-label">Время начала</label>
-                        <input type="text" class="form-control" id="lessonStartInput" name="lesson-start" placeholder="00:00" required>
+                        <input type="text" class="form-control" id="lessonStartInput" name="lesson-start"
+                            placeholder="00:00" required>
 
                         <label for="lessonFinish" class="form-label">Время окончания</label>
-                        <input type="text" class="form-control" id="lessonFinishInput" name="lesson-finish" placeholder="00:00" required>
-                        
+                        <input type="text" class="form-control" id="lessonFinishInput" name="lesson-finish"
+                            placeholder="00:00" required>
+
                         <label for="melodySelect" class="form-label">Выбор мелодии</label>
                         <select class="form-select" aria-label="Select melody" id="melodySelect" name="melodySelect">
-                            
+
                         </select>
                         <label class="form-label">Дополнительные дни</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="1" id="work_at_saturday" name="work_at_saturday">
+                            <input class="form-check-input" type="checkbox" value="1" id="work_at_saturday"
+                                name="work_at_saturday">
                             <label class="form-check-label" for="work_at_saturday">
                                 Суббота
                             </label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="1" id="work_at_sunday" name="work_at_sunday">
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="1" id="work_at_sunday"
+                                name="work_at_sunday">
                             <label class="form-check-label" for="work_at_sunday">
                                 Воскресенье
                             </label>
-                          </div>
-                          
+                        </div>
+
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -162,7 +177,6 @@
     <script src="/static/index.js"></script>
     <script src="/static/api.js"></script>
     <script src="/static/utils.js"></script>
-
 </body>
 
 </html>
