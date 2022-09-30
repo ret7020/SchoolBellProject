@@ -2,14 +2,16 @@ from playsound import playsound
 import os
 
 class AudioManager:    
-    def __init__(self, sounds_dir_path='./data/sounds'):
-        self.sounds_dir_path = sounds_dir_path
+    def __init__(self):
+        pass
 
-    def ring_bell(self, audio_name):
+    def ring_bell(self, audio_path):
+        print("Starting bell")
         try:
-            playsound(os.path.join(self.sounds_dir_path, audio_name))
+            playsound(audio_path)
         except:
-            playsound(os.path.join(self.sounds_dir_path, "mp3.mp3"))
+            print("[ERR] Can't play audio file")
+       
 
 if __name__ == "__main__":
     adm = AudioManager()
