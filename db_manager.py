@@ -1,4 +1,5 @@
 import sqlite3
+from werkzeug.security import check_password_hash
 
 class Db:
     def __init__(self, path_to_db="./data/db"):
@@ -13,8 +14,10 @@ class Db:
         dt = self.cursor.execute("SELECT `timetable`.*, `melodies`.filename FROM `timetable`, `melodies` WHERE `timetable`.melody_id = `melodies`.id").fetchall()
         return dt
 
-    def check_password(self):
-        pass
+    def check_password(self, user_pass_hash):
+        real_pass_hash = self.cursor.execute('SELECT `password` FROM `config`').fetchone()[0]
+        return check_password_hash(real_pass_hash, user_pass_hash)
+        
 
     def get_config(self):
         dt = self.cursor.execute('SELECT * FROM `config`').fetchone()

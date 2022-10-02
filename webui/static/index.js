@@ -130,7 +130,7 @@ document.getElementById("update_configuration_form").addEventListener('submit', 
     var formData = new FormData(document.getElementById("update_configuration_form"));
     sendForm(api_endpoint, formData).then(function(resp){
         if (resp["status"]){
-
+            
         }
     })
 });

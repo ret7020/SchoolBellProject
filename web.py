@@ -1,10 +1,19 @@
 from flask import Flask, render_template, jsonify, request, redirect, Blueprint
 from werkzeug.utils import secure_filename
+from werkzeug.security import generate_password_hash
 import logging
 import datetime
 import os
-from flask_login import current_user, LoginManager, UserMixin
+from flask_login import (
+    LoginManager,
+    current_user,
+    login_required,
+    login_user,
+    logout_user,
+)
 from models import LoginnedUserModel
+
+
 
 class MelodiesStorage:
     def __init__(self, path_to_dir='./data/sounds'):
@@ -24,8 +33,9 @@ class WebUI:
         self.dbm = dbm # Link to database object
         self.tm = tm # Link to timemanager object
         self.aud = aud # Link to audio manager object
-        self.login_manager = LoginManager()
-        self.login_manager.init_app(self.app)
+        self.login_manager = LoginManager(self.app)
+       
+
 
 
         # Disable requests logging in production mode
@@ -36,16 +46,28 @@ class WebUI:
         # Apply blueprints
         self.app.register_blueprint(melodies_storage.blueprint) # Blueprint for custom melodies location
 
-    
+        # UI routes
         @self.app.route('/')
         def __index():
             return self.index()
 
         @self.app.route('/login')
         def __login():
-            pass
+            return self.login()
+        
+
+        # API routes
+        @self.app.route('/api/login', methods=['POST'])
+        def __login_api():
+            return self.login_api()
+
+        @self.app.route('/api/logout')
+        def __logout():
+            return self.logout()
+            
 
         @self.app.route('/api/get_timetable')
+        @login_required
         def __get_timetable():
             '''
             Get all day timetable data
@@ -53,6 +75,7 @@ class WebUI:
             return self.get_timetable()
 
         @self.app.route('/api/update_timetable', methods=['POST'])
+        @login_required
         def __update_timetable():
             '''
             Recreate timetable via lessons start times
@@ -60,6 +83,7 @@ class WebUI:
             return self.update_timetable()
         
         @self.app.route('/api/get_lesson_data')
+        @login_required
         def __get_lesson_data():
             '''
             Get concrete lesson data(time, melody, e.t.c)
@@ -67,6 +91,7 @@ class WebUI:
             return self.get_lesson_data()
 
         @self.app.route('/api/update_lesson', methods=['POST'])
+        @login_required
         def __update_lesson():
             '''
             Change concrete lesson data(time, melody and e.t.c)
@@ -74,6 +99,7 @@ class WebUI:
             return self.update_lesson()
 
         @self.app.route('/api/get_melodies')
+        @login_required
         def __get_melodies():
             '''
             Get all uploaded and registered melodies for bell
@@ -81,6 +107,7 @@ class WebUI:
             return self.get_melodies()
 
         @self.app.route('/api/upload_melody', methods=['POST'])
+        @login_required
         def __upload_melody():
             '''
             Upload and register new melody for bell
@@ -88,6 +115,7 @@ class WebUI:
             return self.upload_melody()
 
         @self.app.route('/api/update_melody_title', methods=['POST'])
+        @login_required
         def __update_melody_title():
             '''
             Change concrete melody title(display title)
@@ -95,6 +123,7 @@ class WebUI:
             return self.update_melody_title()
 
         @self.app.route('/api/hard_refresh')
+        @login_required
         def __hard_refresh():
             '''
             Reload timemanager data directly from database
@@ -102,6 +131,7 @@ class WebUI:
             return self.hard_refresh()
 
         @self.app.route('/api/manual_bell')
+        @login_required
         def __manual_bell():
             '''
             Test bell
@@ -109,11 +139,19 @@ class WebUI:
             return self.manual_bell()
 
         @self.app.route('/api/update_config', methods=['POST'])
+        @login_required
         def __update_config():
             '''
             Change system configuration
             '''
             return self.update_config()
+            
+        @self.login_manager.user_loader
+        def load_user(user_id: str):
+            return LoginnedUserModel.get(user_id)
+
+
+
 
     def parse_timetable(self):
         '''
@@ -137,10 +175,31 @@ class WebUI:
         lessons_cnt = len(time_table_display)
         return time_table_display, lessons_cnt
 
+
+    def login_api(self):
+        correct = self.dbm.check_password(request.form.get('password'))
+        if correct:
+            login_user(LoginnedUserModel(1))
+        return jsonify({"status": correct})
+        
+
+    def login(self):
+        if not current_user.is_authenticated:
+            return render_template('login.html')
+        else:
+            return redirect('/')
+
+    def logout(self):
+        logout_user()
+        return redirect('/login')
+
     def index(self):
-        config = self.dbm.get_config()
-        time_table_display, lessons_cnt = self.parse_timetable()
-        return render_template('index.html', building_number=config["building_number"], time_table=render_template('lessons.html', timetable=time_table_display, lessons_cnt=lessons_cnt))
+        if current_user.is_authenticated:
+            config = self.dbm.get_config()
+            time_table_display, lessons_cnt = self.parse_timetable()
+            return render_template('index.html', building_number=config["building_number"], time_table=render_template('lessons.html', timetable=time_table_display, lessons_cnt=lessons_cnt))
+        else:
+            return redirect('/login')
     
     def get_timetable(self):
         tm_formatted = ''

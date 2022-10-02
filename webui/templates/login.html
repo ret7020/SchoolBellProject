@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+
+    <title>Настройка звонков | Вход</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 offset-md-4">
+                <div class="login-form bg-light mt-4 p-4">
+                    <form action="/api/login" method="POST" class="row g-3" id="login_form">
+                        <h3>Вход в панель управления</h3>
+                        <div class="alert alert-danger" role="alert" id="invalid_password" style="display: none;">
+                            Неверный пароль
+                        </div>
+                          
+                        <div class="col-12">
+                            <label>Пароль</label>
+                            <input type="password" name="password" class="form-control" placeholder="Пароль">
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary float-end">Войти</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+        crossorigin="anonymous"></script>
+    <script src="/static/api.js"></script>
+    <script src="/static/login.js"></script>
+
+</body>
+</html>

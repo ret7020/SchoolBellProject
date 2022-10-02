@@ -1,6 +1,7 @@
 import datetime
 from termcolor import colored
 from audio import AudioManager
+from werkzeug.security import generate_password_hash
 
 class CLI:
     def __init__(self, tm, dbm):
@@ -51,3 +52,8 @@ class CLI:
                 print(new_start_time, new_finish_time, edit_lesson_id)
                 self.dbm.update_lesson(edit_lesson_id, new_start_time, new_finish_time, melody_id)
                 self.tm.update_timetable() # Force update
+
+            elif cmd == "updp":
+                new_pass_hash = generate_password_hash(args[0], method='sha256')
+                print(f"Hash: {new_pass_hash}")
+
