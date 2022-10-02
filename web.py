@@ -3,7 +3,8 @@ from werkzeug.utils import secure_filename
 import logging
 import datetime
 import os
-
+from flask_login import current_user, LoginManager, UserMixin
+from models import LoginnedUserModel
 
 class MelodiesStorage:
     def __init__(self, path_to_dir='./data/sounds'):
@@ -11,18 +12,21 @@ class MelodiesStorage:
 
 
 class WebUI:
-    def __init__(self, name, dbm, tm, aud, melodies_storage, host='0.0.0.0', port='8080', dev_mode=False):
+    def __init__(self, name, dbm, tm, aud, melodies_storage, secret_key='DEF_KEY', host='0.0.0.0', port='8080', dev_mode=False):
         self.app = Flask(name, template_folder="webui/templates",
                          static_url_path='/static', static_folder='webui/static')
         self.app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000 # 16 Mb max upload
-        self.app.config["TEMPLATES_AUTO_RELOAD"] = True # Auto - reload html/css/sources without server reboot
-
+        self.app.config['TEMPLATES_AUTO_RELOAD'] = True # Auto - reload html/css/sources without server reboot
+        self.app.config['SECRET_KEY'] = secret_key
         self.host = host
         self.port = port
         
         self.dbm = dbm # Link to database object
         self.tm = tm # Link to timemanager object
         self.aud = aud # Link to audio manager object
+        self.login_manager = LoginManager()
+        self.login_manager.init_app(self.app)
+
 
         # Disable requests logging in production mode
         if not dev_mode:
@@ -36,6 +40,10 @@ class WebUI:
         @self.app.route('/')
         def __index():
             return self.index()
+
+        @self.app.route('/login')
+        def __login():
+            pass
 
         @self.app.route('/api/get_timetable')
         def __get_timetable():
@@ -170,7 +178,7 @@ class WebUI:
         return jsonify({"status": True, "new_time_table": render_template('lessons.html', timetable=time_table_display, lessons_cnt=lessons_cnt)})
         
     def get_melodies(self):
-        return jsonify({"status": True, "melodies": self.dbm.get_all_melodies()})
+        return jsonify({"status": True, "melodies": self.dbm.get_all_melodies(only_names=True)})
 
     def update_melody_title(self):
         new_title = request.form.get('title')
@@ -198,7 +206,7 @@ class WebUI:
         return jsonify({"status": False})
 
     def manual_bell(self):
-        self.aud.ring_bell("mp3.mp3")
+        self.aud.ring_bell("./data/sounds/mp3.mp3")
         return jsonify({"status": True})
 
     def update_config(self):

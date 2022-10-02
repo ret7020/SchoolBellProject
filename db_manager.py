@@ -38,11 +38,19 @@ class Db:
         self.connection.commit()
         self.tm.update_timetable()
 
-    def get_all_melodies(self):
+    def get_all_melodies(self, only_names=False):
         dt = self.cursor.execute('SELECT * FROM `melodies`').fetchall()
+        if only_names:
+            new_dt = []
+            for melody in dt:
+                melody = list(melody)
+                melody[2] = melody[2].split("/")[-1]
+                new_dt.append(melody)
+            dt = new_dt.copy()
         return dt
 
     def add_melody(self, filename, display_name):
+        filename = f"./data/sounds/{filename}"
         self.cursor.execute('INSERT INTO "melodies" ("display_name", "filename") VALUES (?, ?)', (display_name, filename))
         self.connection.commit()
         return self.cursor.lastrowid
