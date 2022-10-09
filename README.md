@@ -13,7 +13,7 @@ This is a project to automate the work of school bells. The main features are th
 3. Sqlite3 - Database
 #### Frontend
 <b>Native stack</b></br>
-1. Html5 + CSS3 + Pure JS(Modern fetch api for ajax api)
+1. HTML5 + CSS3 + Pure JS(Modern fetch api for ajax api)
 
 ## Installation
 Clone this repository to your Raspberry PI</br>

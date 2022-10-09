@@ -28,6 +28,7 @@
                     data-bs-target="#settingsModal"></i>
                 <i class="fa-solid fa-bell toolbar-icon" title="Проверка звонка"
                     onclick="getReqApi('/api/manual_bell')"></i>
+                <i class="fa-solid fa-circle-info toolbar-icon" data-bs-toggle="modal" data-bs-target="#sysinfoModal" title="Debug info"></i>
                 <i class="fa-solid fa-arrows-rotate toolbar-icon" title="Обновить расписание(Hard refresh)"
                     onclick="window.location.href='/api/hard_refresh'"></i>
                 <i class="fa-solid fa-right-from-bracket toolbar-icon" title="Выйти из панели управления звонками"
@@ -162,6 +163,31 @@
                         </div>
 
                     </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" form="update_lesson_form" class="btn btn-primary">Применить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="sysinfoModal" tabindex="-1" aria-labelledby="sysinfoModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sysinfoModalLabel">Отладочная информация</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div style="display: grid;">
+                        <span>Local Time: <span id="server_local_time" class="config_val">N/A</span></span>
+                        <span>NTP(Moscow) Time: <span id="real_ntp_time" class="config_val">N/A</span></span>
+                        <span>NTP server: <span id="ntp_server_host" class="config_val"></span></span>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>

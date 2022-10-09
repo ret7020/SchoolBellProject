@@ -2,3 +2,5 @@ playsound
 PyGObject
 termcolor
 flask
+ntplib
+pytz

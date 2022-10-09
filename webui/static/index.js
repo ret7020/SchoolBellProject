@@ -43,6 +43,19 @@ const timetableModal = document.getElementById('timetableModal');
 const melodiesModal = document.getElementById('melodiesModal');
 const settingsModal = document.getElementById('settingsModal');
 const lessonModal = document.getElementById('editLessonModal');
+const debugModal = document.getElementById('sysinfoModal');
+
+
+
+debugModal.addEventListener('show.bs.modal', event=> {
+    getReqApi('/api/get_sys').then(function (resp){
+        if (resp["status"]) {
+            document.getElementById("server_local_time").innerText = resp["server_time"]; 
+            document.getElementById("real_ntp_time").innerText = resp["ntp_time"]; 
+            document.getElementById("ntp_server_host").innerText = resp["ntp_server"]; 
+        }
+    })
+})
 
 timetableModal.addEventListener('show.bs.modal', event => {
     getReqApi('/api/get_timetable').then(function (resp) {
@@ -134,3 +147,4 @@ document.getElementById("update_configuration_form").addEventListener('submit', 
         }
     })
 });
+

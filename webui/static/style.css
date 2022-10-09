@@ -55,3 +55,7 @@ body{
 .controll-icon:hover{
     color: #004dbf;
 }
+
+.config_val{
+    font-weight: bold;
+}
