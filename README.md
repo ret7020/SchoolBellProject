@@ -1,6 +1,6 @@
 # School Bell System
 ## About
-![image](https://user-images.githubusercontent.com/55328925/192607462-cd2e86d0-51f6-4301-b7c3-0341b899c6db.png)
+![image](https://user-images.githubusercontent.com/55328925/195398593-111a9cf2-1c18-423a-8d8c-aa6cc8934359.png)
 This is a project to automate the work of school bells. The main features are the ease of installation of the system and simple configuration through a convenient web interface.
 
 ## Techincal Stack
@@ -31,7 +31,7 @@ Run project</br>
 ## Production deployment
 ### Parts:
 1. Autorun on boot
-2. Enable port 80 for Flask
+2. Enable port 80 for Flask (via nginx forwarding)
 3. Test final deployment steps
 
 ## Development workflow

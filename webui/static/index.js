@@ -30,7 +30,7 @@ function update_melody_title(melody_id) {
     let api_endpoint = form.getAttribute("action");
     var formData = new FormData(form);
     sendForm(api_endpoint, formData).then(function (resp) {
-        if (resp["status"]){
+        if (resp["status"]) {
             console.log(resp);
             document.getElementById(`collapse_togler_melody_${melody_id}`).innerText = resp["new_title"];
         }
@@ -38,12 +38,12 @@ function update_melody_title(melody_id) {
 }
 
 
-function check_password_confirmation(current_password, confirm_password){
-    if (current_password == confirm_password){
+function check_password_confirmation(current_password, confirm_password) {
+    if (current_password == confirm_password) {
         submitSettingsButton.disabled = false;
         confirmationStatusText.innerText = "пароли совпадают";
         confirmationStatusText.style.color = "green";
-    }else{
+    } else {
         submitSettingsButton.disabled = true;
         confirmationStatusText.innerText = "пароли не совпадают";
         confirmationStatusText.style.color = "red";
@@ -66,12 +66,12 @@ const confirmationStatusText = document.getElementById('passwordConfirmStatus');
 
 
 
-debugModal.addEventListener('show.bs.modal', event=> {
-    getReqApi('/api/get_sys').then(function (resp){
+debugModal.addEventListener('show.bs.modal', event => {
+    getReqApi('/api/get_sys').then(function (resp) {
         if (resp["status"]) {
-            document.getElementById("server_local_time").innerText = resp["server_time"]; 
-            document.getElementById("real_ntp_time").innerText = resp["ntp_time"]; 
-            document.getElementById("ntp_server_host").innerText = resp["ntp_server"]; 
+            document.getElementById("server_local_time").innerText = resp["server_time"];
+            document.getElementById("real_ntp_time").innerText = resp["ntp_time"];
+            document.getElementById("ntp_server_host").innerText = resp["ntp_server"];
         }
     })
 })
@@ -108,8 +108,11 @@ melodiesModal.addEventListener('show.bs.modal', function (e) {
 
     });
 });
-/*settingsModal.addEventListener('show.bs.modal', function(e){
-});*/
+settingsModal.addEventListener('hide.bs.modal', function (e) {
+    newPasswordInput.value = "";
+    confirmPasswordInput.value = "";
+    confirmPasswordBlock.style.display = "none";
+});
 
 
 document.getElementById("update_timetable_form").addEventListener('submit', function (e) {
@@ -160,23 +163,23 @@ document.getElementById("update_configuration_form").addEventListener('submit', 
     e.preventDefault();
     let api_endpoint = this.getAttribute("action");
     var formData = new FormData(document.getElementById("update_configuration_form"));
-    sendForm(api_endpoint, formData).then(function(resp){
-        if (resp["status"]){
-
+    sendForm(api_endpoint, formData).then(function (resp) {
+        if (resp["status"]) {
+            bootstrap.Modal.getInstance(settingsModal).hide();
         }
     })
 });
 
 
 document.getElementById("newPassword").addEventListener('input', function (e) {
-    if (this.value){
+    if (this.value) {
         check_password_confirmation(this.value, confirmPasswordInput.value);
         confirmPasswordBlock.style.display = "block";
-    }else{
+    } else {
         confirmPasswordBlock.style.display = "none";
     }
 });
 
-confirmPasswordInput.addEventListener('input', function(e){
+confirmPasswordInput.addEventListener('input', function (e) {
     check_password_confirmation(this.value, newPasswordInput.value)
 });

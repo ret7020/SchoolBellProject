@@ -1,43 +1,55 @@
 import sqlite3
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
+
 
 class Db:
-    def __init__(self, path_to_db="./data/db"):
+    '''
+    Class to work with database.
+    Execute raw sql queries
+    '''
+
+    def __init__(self, path_to_db: str = "./data/db"):
         self.path_to_db = path_to_db
-        self.connection = sqlite3.connect(self.path_to_db, check_same_thread=False)
+        self.connection = sqlite3.connect(
+            self.path_to_db, check_same_thread=False)
         self.cursor = self.connection.cursor()
 
-    def update_timemanager(self, tm):
+    def update_timemanager(self, tm: object) -> None:
         self.tm = tm
 
-    def get_timetable(self):
-        dt = self.cursor.execute("SELECT `timetable`.*, `melodies`.filename FROM `timetable`, `melodies` WHERE `timetable`.melody_id = `melodies`.id").fetchall()
+    def get_timetable(self) -> list:
+        dt = self.cursor.execute(
+            "SELECT `timetable`.*, `melodies`.filename FROM `timetable`, `melodies` WHERE `timetable`.melody_id = `melodies`.id").fetchall()
         return dt
 
-    def check_password(self, user_pass_hash):
-        real_pass_hash = self.cursor.execute('SELECT `password` FROM `config`').fetchone()[0]
+    def check_password(self, user_pass_hash: str) -> bool:
+        real_pass_hash = self.cursor.execute(
+            'SELECT `password` FROM `config`').fetchone()[0]
         return check_password_hash(real_pass_hash, user_pass_hash)
-        
 
-    def get_config(self):
+    def get_config(self) -> dict: 
         dt = self.cursor.execute('SELECT * FROM `config`').fetchone()
         res = {"password_hash": dt[0], "building_number": dt[1]}
         return res
 
-    def update_timetable(self, timetable):
-        self.cursor.execute('UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME="timetable";')
+    def update_timetable(self, timetable) -> None:
+        self.cursor.execute(
+            'UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME="timetable";')
         self.cursor.execute('DELETE FROM `timetable`')
         for lesson in timetable:
-            self.cursor.execute('INSERT INTO "main"."timetable"("time_start", "time_finish", "melody_id") VALUES (?, ?, ?)', (lesson[0], lesson[1], 1))
+            self.cursor.execute(
+                'INSERT INTO "main"."timetable"("time_start", "time_finish", "melody_id") VALUES (?, ?, ?)', (lesson[0], lesson[1], 1))
         self.connection.commit()
         self.tm.update_timetable()
 
     def get_lesson(self, lesson_id):
-        dt = self.cursor.execute('SELECT * FROM `timetable` WHERE `id` = ?', (lesson_id, )).fetchone()
+        dt = self.cursor.execute(
+            'SELECT * FROM `timetable` WHERE `id` = ?', (lesson_id, )).fetchone()
         return dt
 
     def update_lesson(self, lesson_id, lesson_start, lesson_finish, melody_id, saturday_work=False, sunday_work=False):
-        self.cursor.execute('UPDATE `timetable` SET `time_start` = ?, `time_finish` = ?, `melody_id` = ?, `saturday_work` = ?, `sunday_work` = ? WHERE `id` = ?', (lesson_start, lesson_finish, melody_id, saturday_work == "1", sunday_work == "1", lesson_id))
+        self.cursor.execute('UPDATE `timetable` SET `time_start` = ?, `time_finish` = ?, `melody_id` = ?, `saturday_work` = ?, `sunday_work` = ? WHERE `id` = ?',
+                            (lesson_start, lesson_finish, melody_id, saturday_work == "1", sunday_work == "1", lesson_id))
         self.connection.commit()
         self.tm.update_timetable()
 
@@ -54,18 +66,28 @@ class Db:
 
     def add_melody(self, filename, display_name):
         filename = f"./data/sounds/{filename}"
-        self.cursor.execute('INSERT INTO "melodies" ("display_name", "filename") VALUES (?, ?)', (display_name, filename))
+        self.cursor.execute(
+            'INSERT INTO "melodies" ("display_name", "filename") VALUES (?, ?)', (display_name, filename))
         self.connection.commit()
         return self.cursor.lastrowid
 
     def update_melody_title(self, melody_id, melody_new_name):
-        self.cursor.execute('UPDATE `melodies` SET `display_name` = ? WHERE `id` = ?', (melody_new_name, melody_id))
+        self.cursor.execute(
+            'UPDATE `melodies` SET `display_name` = ? WHERE `id` = ?', (melody_new_name, melody_id))
         self.connection.commit()
 
-    def update_config(self, building_number, new_password):
+    def update_config(self, building_number, new_password=None, new_password_confirmation=None):
         if building_number:
-            self.cursor.execute('UPDATE `config` SET `school_building_num` = ?', (building_number, ))
+            self.cursor.execute(
+                'UPDATE `config` SET `school_building_num` = ?', (building_number, ))
+        if new_password and new_password_confirmation:
+            if new_password == new_password_confirmation:
+                hash_ = generate_password_hash(new_password, method='sha256')
+                self.cursor.execute(
+                    'UPDATE `config` SET `password` = ?', (hash_, ))
+                self.connection.commit()
         self.connection.commit()
+
 
 if __name__ == "__main__":
     print("[DEBUG] Testing db manager library")

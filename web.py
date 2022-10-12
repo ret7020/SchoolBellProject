@@ -283,7 +283,7 @@ class WebUI:
 
     def update_config(self):
         self.dbm.update_config(request.form.get(
-            "building_number"), request.form.get("new_password"))
+            "building_number"), request.form.get("new_password"), request.form.get("new_password_confirm"))
         return jsonify({"status": True})
 
     def get_system_info(self):
