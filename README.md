@@ -22,17 +22,22 @@ git clone https://github.com/ret7020/SchoolBellProject
 ```
 Start the installer(WITH ROOT PRIVILAGES)</br>
 ```
+chmod +x installer.sh
 sudo ./installer.sh
 ```
-Run project</br>
+Change SECRET_KEY in `config.py` to long random string</br>
+Run project(only for current ssh session)</br>
 ```
 ./run.sh
 ```
 ## Production deployment
-### Parts:
-1. Autorun on boot
-2. Enable port 80 for Flask (via nginx forwarding)
-3. Test final deployment steps
+### Autorun on boot
+If your system use systemd as init system you can run script `./setup_autorun.sh`(with root privilages) to apply autorun automatically.
+In the other cases refer to documentation for your init system.
+### Enable port 80 for Flask (via nginx forwarding)
+The installer script immediately installs nginx, adds it to autoload and applies a special config that redirects port 8080 from the flask server to 80 nginx port.
+### Test final deployment steps
+No content for now
 
 ## Development workflow
 ### ToDo
@@ -43,7 +48,8 @@ Run project</br>
 5. Adaptive WebUI for smartphones :heavy_check_mark:
 6. Bindings to weekdays(DISABLE bell on Saturday and Sunday)
 7. Design as a REST API application with mostly AJAX WebUI as client :heavy_check_mark:
-8. Create Production Setup
+8. Create Production Setup :heavy_check_mark:
+9. Create first release (1.0.0)
 
 ## Screenshots
 ![image](https://user-images.githubusercontent.com/55328925/193130050-b140f16a-6967-4fa3-97ed-22f834dda666.png)
