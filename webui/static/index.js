@@ -38,12 +38,31 @@ function update_melody_title(melody_id) {
 }
 
 
+function check_password_confirmation(current_password, confirm_password){
+    if (current_password == confirm_password){
+        submitSettingsButton.disabled = false;
+        confirmationStatusText.innerText = "пароли совпадают";
+        confirmationStatusText.style.color = "green";
+    }else{
+        submitSettingsButton.disabled = true;
+        confirmationStatusText.innerText = "пароли не совпадают";
+        confirmationStatusText.style.color = "red";
+    }
+}
+
+
 // Bindings
 const timetableModal = document.getElementById('timetableModal');
 const melodiesModal = document.getElementById('melodiesModal');
 const settingsModal = document.getElementById('settingsModal');
 const lessonModal = document.getElementById('editLessonModal');
 const debugModal = document.getElementById('sysinfoModal');
+
+const confirmPasswordBlock = document.getElementById('passwordConfirmationBlock');
+const confirmPasswordInput = document.getElementById('newPasswordConfirm');
+const newPasswordInput = document.getElementById('newPassword');
+const submitSettingsButton = document.getElementById('updateConfigurationButton');
+const confirmationStatusText = document.getElementById('passwordConfirmStatus');
 
 
 
@@ -143,8 +162,21 @@ document.getElementById("update_configuration_form").addEventListener('submit', 
     var formData = new FormData(document.getElementById("update_configuration_form"));
     sendForm(api_endpoint, formData).then(function(resp){
         if (resp["status"]){
-            
+
         }
     })
 });
 
+
+document.getElementById("newPassword").addEventListener('input', function (e) {
+    if (this.value){
+        check_password_confirmation(this.value, confirmPasswordInput.value);
+        confirmPasswordBlock.style.display = "block";
+    }else{
+        confirmPasswordBlock.style.display = "none";
+    }
+});
+
+confirmPasswordInput.addEventListener('input', function(e){
+    check_password_confirmation(this.value, newPasswordInput.value)
+});

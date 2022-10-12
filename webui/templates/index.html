@@ -110,13 +110,18 @@
                             placeholder="11" value="{{building_number}}" required>
 
                         <label for="newPassword" class="form-label">Новый пароль</label>
-                        <input type="text" class="form-control" id="newPassword" name="new_password"
+                        <input type="password" class="form-control" id="newPassword" name="new_password"
                             placeholder="Оставьте пустым, чтобы не менять пароль">
+                        <div id="passwordConfirmationBlock" style="display: none;">
+                            <label for="newPasswordConfirm" class="form-label">Повторите пароль <span id="passwordConfirmStatus" style="color: red">пароли не совпадают</span></label>
+                            <input type="password" class="form-control" id="newPasswordConfirm" name="new_password_confirm"
+                                placeholder="Повторите новый пароль">
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                    <button type="submit" form="update_configuration_form" class="btn btn-primary">Обновить</button>
+                    <button type="submit" form="update_configuration_form" class="btn btn-primary" id="updateConfigurationButton">Обновить</button>
                 </div>
             </div>
         </div>
