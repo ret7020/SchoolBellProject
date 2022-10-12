@@ -37,7 +37,7 @@ This is an instruction for systemd systems(systems with systemd as init). In the
 ```
 vim school-bells.service
 ```
-2. Edit line number <b>7</b>, change `/home/pi/main.py` with your <b>absolute</b> path to main.py file in SchoolBellProject 
+2. Edit line number <b>7</b>, change `/home/pi/Documents/Progs/SchoolBellProject/` with your <b>absolute</b> path to directory with SchoolBellProject 
 3.
 
 ### Enable port 80 for Flask (via nginx forwarding)

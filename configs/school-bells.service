@@ -4,7 +4,10 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 /home/pi/main.py
+WorkingDirectory=/home/pi/Documents/Progs/SchoolBellProject/
+ExecStart=/usr/bin/bash /home/pi/Documents/Progs/SchoolBellProject/run.sh
+Environment="PYTHONPATH=$PYTHONPATH:/home/pi/.local/lib/python3.9/site-packages"
+
 
 [Install]
 WantedBy=multi-user.target
