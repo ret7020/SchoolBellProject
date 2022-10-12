@@ -1,3 +1,3 @@
-CURR_ABS_PATH=$(pwd)
-SCRIPT_NAME="/main.py"
-MAIN_SCRIPT_ABS_PATH=$CURR_ABS_PATH$SCRIPT_NAME
+sudo cp ./configs/school-bells.service /lib/systemd/system/school-bells.service
+sudo systemctl start school-bells.service
+sudo systemctl enable school-bells.service

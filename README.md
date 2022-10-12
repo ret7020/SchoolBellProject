@@ -32,8 +32,14 @@ Run project(only for current ssh session)</br>
 ```
 ## Production deployment
 ### Autorun on boot
-If your system use systemd as init system you can run script `./setup_autorun.sh`(with root privilages) to apply autorun automatically.
-In the other cases refer to documentation for your init system.
+This is an instruction for systemd systems(systems with systemd as init). In the other cases refer to documentation for your init system.</br>
+1. Open `./configs/school-bells.service` with `vim`, `nano` or another text editor.
+```
+vim school-bells.service
+```
+2. Edit line number <b>7</b>, change `/home/pi/main.py` with your <b>absolute</b> path to main.py file in SchoolBellProject 
+3.
+
 ### Enable port 80 for Flask (via nginx forwarding)
 The installer script immediately installs nginx, adds it to autoload and applies a special config that redirects port 8080 from the flask server to 80 nginx port.
 ### Test final deployment steps

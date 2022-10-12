@@ -1,10 +1,10 @@
 [Unit]
-Description=My Sample Service
+Description=School bell automation system
 After=multi-user.target
 
 [Service]
-Type=idle
-ExecStart=/usr/bin/python3 /home/pi/sample.py
+Type=simple
+ExecStart=/usr/bin/python3 /home/pi/main.py
 
 [Install]
 WantedBy=multi-user.target
