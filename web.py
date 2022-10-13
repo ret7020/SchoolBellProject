@@ -14,6 +14,7 @@ from flask_login import (
 from models import LoginnedUserModel
 import ntplib
 import pytz
+from stats import get_stats 
 
 
 class MelodiesStorage:
@@ -39,6 +40,7 @@ class WebUI:
         self.aud = aud  # Link to audio manager object
         self.login_manager = LoginManager(self.app)
         self.ntp_server = ntp_server
+        self.ntc = ntplib.NTPClient()
 
         # Disable requests logging in production mode
         if not dev_mode:
@@ -289,15 +291,16 @@ class WebUI:
     def get_system_info(self):
         current_time_raw = datetime.datetime.now()
         current_time_fr = current_time_raw.strftime("%H:%M:%S")
-        ntc = ntplib.NTPClient()
+        
         try:
-            response = ntc.request(self.ntp_server, version=3)
+            response = self.ntc.request(self.ntp_server, version=3)
             ntp_time = datetime.datetime.fromtimestamp(
                 response.tx_time, pytz.timezone("Europe/Moscow")).strftime("%H:%M:%S")
         except ntplib.NTPException:
             ntp_time = "N/A"
-        del ntc
-        return jsonify({"status": True, "server_time": current_time_fr, "ntp_time": ntp_time, "ntp_server": self.ntp_server})
+        base_data = {"status": True, "server_time": current_time_fr, "ntp_time": ntp_time, "ntp_server": self.ntp_server}
+        base_data.update(get_stats())
+        return jsonify(base_data)
 
     def run(self):
         self.app.run(host=self.host, port=self.port)

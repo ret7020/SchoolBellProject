@@ -67,11 +67,16 @@ const confirmationStatusText = document.getElementById('passwordConfirmStatus');
 
 
 debugModal.addEventListener('show.bs.modal', event => {
+    let req_time_start = new Date().getTime();
     getReqApi('/api/get_sys').then(function (resp) {
         if (resp["status"]) {
             document.getElementById("server_local_time").innerText = resp["server_time"];
             document.getElementById("real_ntp_time").innerText = resp["ntp_time"];
             document.getElementById("ntp_server_host").innerText = resp["ntp_server"];
+            document.getElementById("api_req_time").innerText = `${new Date().getTime() - req_time_start} ms`;
+            document.getElementById("cpu_temperature").innerText = `${resp["cpu_temperature"]}°C`;
+            document.getElementById("cpu_usage").innerText = `${resp["cpu_load"]}%`;
+            document.getElementById("ram_usage").innerText = `${resp["ram_load"]}%`;
         }
     })
 })

@@ -26,7 +26,7 @@ chmod +x installer.sh
 sudo ./installer.sh
 ```
 Change SECRET_KEY in `config.py` to long random string</br>
-Run project(only for current ssh session)</br>
+Run project<b>(only for current ssh session without autostart)</b></br>
 ```
 ./run.sh
 ```
@@ -38,12 +38,20 @@ This is an instruction for systemd systems(systems with systemd as init). In the
 vim school-bells.service
 ```
 2. Edit line number <b>7</b>, change `/home/pi/Documents/Progs/SchoolBellProject/` with your <b>absolute</b> path to directory with SchoolBellProject 
-3.
+3. Edit line number <b>8</b>, change `/home/pi/Documents/Progs/SchoolBellProject/run.sh` with <b>absolute</b> path to `run.sh` file SchoolBellProject dir
+4. Edit line number <b>9</b>, change `/home/pi/.local/lib/python3.9/site-packages` with <b>absolute</b> path to your python env(with installed libraies from `requirements.txt`)
+5. Then execute script `setup_autorun.sh`
+6. After it you can check service status (if must be active)
+```
+sudo systemctl start school-bells.service
+```
+
 
 ### Enable port 80 for Flask (via nginx forwarding)
 The installer script immediately installs nginx, adds it to autoload and applies a special config that redirects port 8080 from the flask server to 80 nginx port.
 ### Test final deployment steps
-No content for now
+1. Check web ui on port 80.
+2. Reboot RPi and check autorun on boot
 
 ## Development workflow
 ### ToDo
