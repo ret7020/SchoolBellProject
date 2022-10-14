@@ -155,6 +155,11 @@ class WebUI:
         def __get_system_info():
             return self.get_system_info()
 
+        @self.app.route('/api/get_mute_mode')
+        @login_required
+        def __get_mute_mode():
+            return self.get_mute_mode()
+
         @self.login_manager.user_loader
         def load_user(user_id: str):
             return LoginnedUserModel.get(user_id)
@@ -301,6 +306,9 @@ class WebUI:
         base_data = {"status": True, "server_time": current_time_fr, "ntp_time": ntp_time, "ntp_server": self.ntp_server}
         base_data.update(get_stats())
         return jsonify(base_data)
+
+    def get_mute_mode(self):
+        return jsonify({"status": True, "mute_mode": self.tm.mute_mode})
 
     def run(self):
         self.app.run(host=self.host, port=self.port)

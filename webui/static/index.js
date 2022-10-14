@@ -57,12 +57,29 @@ const melodiesModal = document.getElementById('melodiesModal');
 const settingsModal = document.getElementById('settingsModal');
 const lessonModal = document.getElementById('editLessonModal');
 const debugModal = document.getElementById('sysinfoModal');
+const muteDayModal = document.getElementById('muteDayModal');
 
 const confirmPasswordBlock = document.getElementById('passwordConfirmationBlock');
 const confirmPasswordInput = document.getElementById('newPasswordConfirm');
 const newPasswordInput = document.getElementById('newPassword');
 const submitSettingsButton = document.getElementById('updateConfigurationButton');
 const confirmationStatusText = document.getElementById('passwordConfirmStatus');
+
+
+
+muteDayModal.addEventListener('show.bs.modal', function (e) {
+    getReqApi('/api/get_mute_mode').then(function(resp){
+        if (resp["status"]){
+            if (resp["mute_mode"] == 0){
+                document.getElementById("mute_mode_status").innerText = "звук включен";
+                document.getElementById("mute_mode_status").style.color = "green";
+            }else{
+                document.getElementById("mute_mode_status").innerText = "звук выключен";
+                document.getElementById("mute_mode_status").style.color = "red";
+            }
+        }
+    });
+});
 
 
 

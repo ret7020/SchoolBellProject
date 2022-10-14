@@ -19,7 +19,7 @@
     <div class="container">
         <h1 class="text-center">Корпус {{building_number}}</h1>
         <div class="row toolbar">
-            <div style="display: inline-block;">
+            <div class="col" style="display: inline-block;">
                 <i class="fa-solid fa-table toolbar-icon" title="Расписание" data-bs-toggle="modal"
                     data-bs-target="#timetableModal"></i>
                 <i class="fa-solid fa-music toolbar-icon" data-bs-toggle="modal" data-bs-target="#melodiesModal"
@@ -31,7 +31,9 @@
                 <i class="fa-solid fa-circle-info toolbar-icon" data-bs-toggle="modal" data-bs-target="#sysinfoModal" title="Debug info"></i>
                 <i class="fa-solid fa-arrows-rotate toolbar-icon" title="Обновить расписание(Hard refresh)"
                     onclick="window.location.href='/api/hard_refresh'"></i>
-                <i class="fa-solid fa-right-from-bracket toolbar-icon" title="Выйти из панели управления звонками"
+                <i class="fa-solid fa-volume-xmark toolbar-icon" title="Тихий день - отключить звонок" data-bs-toggle="modal" data-bs-target="#muteDayModal"></i>
+
+                <i class="fa-solid fa-right-from-bracket toolbar-icon float-end" title="Выйти из панели управления звонками"
                     onclick="window.location.href='/api/logout'"></i>
             </div>
         </div>
@@ -197,6 +199,26 @@
                         <span>CPU temperature: <span id="cpu_temperature" class="config_val">N/A</span></span>
                         <span>CPU usage: <span id="cpu_usage" class="config_val">N/A</span></span>
                         <span>RAM usage: <span id="ram_usage" class="config_val">N/A</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="muteDayModal" tabindex="-1" aria-labelledby="muteDayModal"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="muteDayModalLabel">Отключить звонок</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div style="display: grid;">
+                        <span>Текущий статус: <span id="mute_mode_status"></span></span>
+                        <hr></hr>
+                        <span>Ручная настройка</span>
                     </div>
                 </div>
             </div>

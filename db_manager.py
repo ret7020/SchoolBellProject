@@ -88,6 +88,9 @@ class Db:
                 self.connection.commit()
         self.connection.commit()
 
+    def get_mute_mode(self):
+        data = self.cursor.execute('SELECT `mute_mode` FROM `config`').fetchone()
+        return data[0]
 
 if __name__ == "__main__":
     print("[DEBUG] Testing db manager library")

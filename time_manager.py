@@ -13,6 +13,7 @@ class TimeController:
 
     def update_timetable(self):
         self.timetable = self.dbm.get_timetable()
+        self.mute_mode = self.dbm.get_mute_mode()
 
     def check_loop(self, aud):
         try:
@@ -25,7 +26,8 @@ class TimeController:
                     if lesson[1] == current_time_fr or lesson[2] == current_time_fr: # If it is time for bell
                         if (weekday == 5 and not lesson[4]) or (weekday == 6 and not lesson[5]): # Skip Sunday or Saturday bell
                             continue # Skip
-                        aud.ring_bell(lesson[6])
+                        if self.mute_mode != 1:
+                            aud.ring_bell(lesson[6])
                         time.sleep(61 - datetime.datetime.now().second) # Sleep for one minute after bell rang. Protect from multiple bells per one minute
         except Exception as e:
             '''
