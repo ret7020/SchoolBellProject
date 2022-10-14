@@ -160,6 +160,11 @@ class WebUI:
         def __get_mute_mode():
             return self.get_mute_mode()
 
+        @self.app.route('/api/toggle_mute_mode')
+        @login_required
+        def __toggle_mute_mode():
+            return self.change_mute_mode()
+
         @self.login_manager.user_loader
         def load_user(user_id: str):
             return LoginnedUserModel.get(user_id)
@@ -308,7 +313,13 @@ class WebUI:
         return jsonify(base_data)
 
     def get_mute_mode(self):
-        return jsonify({"status": True, "mute_mode": self.tm.mute_mode})
+        mute_data = self.tm.mute_mode.copy()
+        mute_data[1] = [mute_data[1].day, mute_data[1].month, mute_data[1].year]
+        return jsonify({"status": True, "mute_mode": mute_data})
+
+    def change_mute_mode(self):
+        self.dbm.set_mute_mode()
+        return jsonify({"status": True})
 
     def run(self):
         self.app.run(host=self.host, port=self.port)

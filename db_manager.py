@@ -1,6 +1,6 @@
 import sqlite3
 from werkzeug.security import check_password_hash, generate_password_hash
-
+import datetime
 
 class Db:
     '''
@@ -11,7 +11,7 @@ class Db:
     def __init__(self, path_to_db: str = "./data/db"):
         self.path_to_db = path_to_db
         self.connection = sqlite3.connect(
-            self.path_to_db, check_same_thread=False)
+            self.path_to_db, check_same_thread=False, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
         self.cursor = self.connection.cursor()
 
     def update_timemanager(self, tm: object) -> None:
@@ -64,19 +64,19 @@ class Db:
             dt = new_dt.copy()
         return dt
 
-    def add_melody(self, filename, display_name):
+    def add_melody(self, filename, display_name) -> int:
         filename = f"./data/sounds/{filename}"
         self.cursor.execute(
             'INSERT INTO "melodies" ("display_name", "filename") VALUES (?, ?)', (display_name, filename))
         self.connection.commit()
         return self.cursor.lastrowid
 
-    def update_melody_title(self, melody_id, melody_new_name):
+    def update_melody_title(self, melody_id, melody_new_name) -> None:
         self.cursor.execute(
             'UPDATE `melodies` SET `display_name` = ? WHERE `id` = ?', (melody_new_name, melody_id))
         self.connection.commit()
 
-    def update_config(self, building_number, new_password=None, new_password_confirmation=None):
+    def update_config(self, building_number, new_password=None, new_password_confirmation=None) -> None:
         if building_number:
             self.cursor.execute(
                 'UPDATE `config` SET `school_building_num` = ?', (building_number, ))
@@ -88,9 +88,17 @@ class Db:
                 self.connection.commit()
         self.connection.commit()
 
-    def get_mute_mode(self):
-        data = self.cursor.execute('SELECT `mute_mode` FROM `config`').fetchone()
-        return data[0]
+    def get_mute_mode(self) -> list:
+        data = self.cursor.execute('SELECT `mute_mode`, `mute_mode_enabled_date` FROM `config`').fetchone()
+        return list(data)
+
+    def set_mute_mode(self) -> None:
+        data = self.cursor.execute('UPDATE `config` SET `mute_mode` = ?, `mute_mode_enabled_date` = ?', (1, datetime.datetime.now(), ))
+        self.connection.commit()
+        self.tm.update_timetable()
+
+    def reset_mute_mode(self) -> None:
+        self.cursor.execute('UPDATE `config` SET `mute_mode` = 0')
 
 if __name__ == "__main__":
     print("[DEBUG] Testing db manager library")

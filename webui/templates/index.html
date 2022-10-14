@@ -28,13 +28,15 @@
                     data-bs-target="#settingsModal"></i>
                 <i class="fa-solid fa-bell toolbar-icon" title="Проверка звонка"
                     onclick="getReqApi('/api/manual_bell')"></i>
-                <i class="fa-solid fa-circle-info toolbar-icon" data-bs-toggle="modal" data-bs-target="#sysinfoModal" title="Debug info"></i>
+                <i class="fa-solid fa-circle-info toolbar-icon" data-bs-toggle="modal" data-bs-target="#sysinfoModal"
+                    title="Debug info"></i>
                 <i class="fa-solid fa-arrows-rotate toolbar-icon" title="Обновить расписание(Hard refresh)"
                     onclick="window.location.href='/api/hard_refresh'"></i>
-                <i class="fa-solid fa-volume-xmark toolbar-icon" title="Тихий день - отключить звонок" data-bs-toggle="modal" data-bs-target="#muteDayModal"></i>
+                <i class="fa-solid fa-volume-xmark toolbar-icon" title="Тихий день - отключить звонок"
+                    data-bs-toggle="modal" data-bs-target="#muteDayModal"></i>
 
-                <i class="fa-solid fa-right-from-bracket toolbar-icon float-end" title="Выйти из панели управления звонками"
-                    onclick="window.location.href='/api/logout'"></i>
+                <i class="fa-solid fa-right-from-bracket toolbar-icon float-end"
+                    title="Выйти из панели управления звонками" onclick="window.location.href='/api/logout'"></i>
             </div>
         </div>
         <div id="timetable_area">
@@ -115,15 +117,17 @@
                         <input type="password" class="form-control" id="newPassword" name="new_password"
                             placeholder="Оставьте пустым, чтобы не менять пароль" autocomplete="off">
                         <div id="passwordConfirmationBlock" style="display: none;">
-                            <label for="newPasswordConfirm" class="form-label">Повторите пароль <span id="passwordConfirmStatus" style="color: red">пароли не совпадают</span></label>
-                            <input type="password" class="form-control" id="newPasswordConfirm" name="new_password_confirm"
-                                placeholder="Повторите новый пароль" autocomplete="off">
+                            <label for="newPasswordConfirm" class="form-label">Повторите пароль <span
+                                    id="passwordConfirmStatus" style="color: red">пароли не совпадают</span></label>
+                            <input type="password" class="form-control" id="newPasswordConfirm"
+                                name="new_password_confirm" placeholder="Повторите новый пароль" autocomplete="off">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                    <button type="submit" form="update_configuration_form" class="btn btn-primary" id="updateConfigurationButton">Обновить</button>
+                    <button type="submit" form="update_configuration_form" class="btn btn-primary"
+                        id="updateConfigurationButton">Обновить</button>
                 </div>
             </div>
         </div>
@@ -181,8 +185,7 @@
 
 
 
-    <div class="modal fade" id="sysinfoModal" tabindex="-1" aria-labelledby="sysinfoModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="sysinfoModal" tabindex="-1" aria-labelledby="sysinfoModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -195,7 +198,8 @@
                         <span>NTP(Moscow) Time: <span id="real_ntp_time" class="config_val">N/A</span></span>
                         <span>NTP server: <span id="ntp_server_host" class="config_val">N/A</span></span>
                         <span>API req time: <span id="api_req_time" class="config_val">N/A</span></span>
-                        <hr></hr>
+                        <hr>
+                        </hr>
                         <span>CPU temperature: <span id="cpu_temperature" class="config_val">N/A</span></span>
                         <span>CPU usage: <span id="cpu_usage" class="config_val">N/A</span></span>
                         <span>RAM usage: <span id="ram_usage" class="config_val">N/A</span></span>
@@ -206,8 +210,7 @@
     </div>
 
 
-    <div class="modal fade" id="muteDayModal" tabindex="-1" aria-labelledby="muteDayModal"
-        aria-hidden="true">
+    <div class="modal fade" id="muteDayModal" tabindex="-1" aria-labelledby="muteDayModal" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -217,8 +220,14 @@
                 <div class="modal-body">
                     <div style="display: grid;">
                         <span>Текущий статус: <span id="mute_mode_status"></span></span>
-                        <hr></hr>
-                        <span>Ручная настройка</span>
+                        <div class="d-flex">
+                            Звук включен:
+                            <div class="form-switch ms-2">
+                                <input type="checkbox" class="form-check-input" id="sounds_status">
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
             </div>

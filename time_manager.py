@@ -26,8 +26,16 @@ class TimeController:
                     if lesson[1] == current_time_fr or lesson[2] == current_time_fr: # If it is time for bell
                         if (weekday == 5 and not lesson[4]) or (weekday == 6 and not lesson[5]): # Skip Sunday or Saturday bell
                             continue # Skip
-                        if self.mute_mode != 1:
-                            aud.ring_bell(lesson[6])
+                        bell_status = True
+                        if self.mute_mode[0] == 1:
+                            next_day_from_mute = current_time_raw + datetime.timedelta(days=1)
+                            if current_time_raw.date() >= next_day_from_mute.date(): # If one from mute mode turned on finished we enable bell
+                                self.mute_mode = [0, 0]
+                                self.dbm.reset_mute_mode()
+                            else:
+                                bell_status = False # disable
+                        aud.ring_bell(lesson[6])
+
                         time.sleep(61 - datetime.datetime.now().second) # Sleep for one minute after bell rang. Protect from multiple bells per one minute
         except Exception as e:
             '''

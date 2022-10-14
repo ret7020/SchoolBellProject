@@ -70,12 +70,15 @@ const confirmationStatusText = document.getElementById('passwordConfirmStatus');
 muteDayModal.addEventListener('show.bs.modal', function (e) {
     getReqApi('/api/get_mute_mode').then(function(resp){
         if (resp["status"]){
-            if (resp["mute_mode"] == 0){
+            let switcher = document.getElementById("sounds_status");
+            if (resp["mute_mode"][0] == 1){
+                document.getElementById("mute_mode_status").innerText = `звук выключен c ${resp['mute_mode'][1][0]}.${resp['mute_mode'][1][1]}.${resp['mute_mode'][1][2]}`;
+                document.getElementById("mute_mode_status").style.color = "red";
+                switcher.checked = false;
+            }else{
                 document.getElementById("mute_mode_status").innerText = "звук включен";
                 document.getElementById("mute_mode_status").style.color = "green";
-            }else{
-                document.getElementById("mute_mode_status").innerText = "звук выключен";
-                document.getElementById("mute_mode_status").style.color = "red";
+                switcher.checked = true;
             }
         }
     });
