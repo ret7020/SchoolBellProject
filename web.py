@@ -14,7 +14,7 @@ from flask_login import (
 from models import LoginnedUserModel
 import ntplib
 import pytz
-from stats import get_stats 
+from stats import get_stats
 
 
 class MelodiesStorage:
@@ -163,7 +163,7 @@ class WebUI:
         @self.app.route('/api/toggle_mute_mode')
         @login_required
         def __toggle_mute_mode():
-            return self.change_mute_mode()
+            return self.change_mute_mode(request.args.get("current_mode"))
 
         @self.login_manager.user_loader
         def load_user(user_id: str):
@@ -301,24 +301,29 @@ class WebUI:
     def get_system_info(self):
         current_time_raw = datetime.datetime.now()
         current_time_fr = current_time_raw.strftime("%H:%M:%S")
-        
+
         try:
             response = self.ntc.request(self.ntp_server, version=3)
             ntp_time = datetime.datetime.fromtimestamp(
                 response.tx_time, pytz.timezone("Europe/Moscow")).strftime("%H:%M:%S")
         except ntplib.NTPException:
             ntp_time = "N/A"
-        base_data = {"status": True, "server_time": current_time_fr, "ntp_time": ntp_time, "ntp_server": self.ntp_server}
+        base_data = {"status": True, "server_time": current_time_fr,
+                     "ntp_time": ntp_time, "ntp_server": self.ntp_server}
         base_data.update(get_stats())
         return jsonify(base_data)
 
     def get_mute_mode(self):
         mute_data = self.tm.mute_mode.copy()
-        mute_data[1] = [mute_data[1].day, mute_data[1].month, mute_data[1].year]
+        mute_data[1] = [mute_data[1].day,
+                        mute_data[1].month, mute_data[1].year]
         return jsonify({"status": True, "mute_mode": mute_data})
 
-    def change_mute_mode(self):
-        self.dbm.set_mute_mode()
+    def change_mute_mode(self, current_mode):
+        if current_mode == "true":
+            self.dbm.set_mute_mode()
+        else:
+            self.dbm.reset_mute_mode()
         return jsonify({"status": True})
 
     def run(self):

@@ -99,6 +99,8 @@ class Db:
 
     def reset_mute_mode(self) -> None:
         self.cursor.execute('UPDATE `config` SET `mute_mode` = 0')
+        self.connection.commit()
+        self.tm.update_timetable()
 
 if __name__ == "__main__":
     print("[DEBUG] Testing db manager library")
