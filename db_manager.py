@@ -32,6 +32,16 @@ class Db:
         res = {"password_hash": dt[0], "building_number": dt[1]}
         return res
 
+    def validate_timetable(self, timetable) -> bool:
+        lessons_cnt = len(timetable)
+        for lesson_id in range(lessons_cnt):
+            if lesson_id < lessons_cnt - 1:
+                curr_lesson_finish = datetime.datetime.strptime(timetable[lesson_id][1], "%H:%M")
+                next_lesson_start = datetime.datetime.strptime(timetable[lesson_id + 1][0], "%H:%M")
+                if curr_lesson_finish >= next_lesson_start:
+                    return [False, lesson_id + 1, lesson_id + 2]
+        return [True, 0, 0]
+
     def update_timetable(self, timetable) -> None:
         self.cursor.execute(
             'UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME="timetable";')

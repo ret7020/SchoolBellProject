@@ -52,6 +52,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <div class="alert alert-danger" role="alert" id="error_timetable" style="display: none">
+                        Ошибка: N/A
+                    </div>
                     <form action="/api/update_timetable" id="update_timetable_form">
                         <label for="timetable-raw" class="form-label" style="font-weight: bold;">Уроки</label>
                         <textarea class="form-control" name="timetable-raw" id="timetable-raw-times"

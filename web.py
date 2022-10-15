@@ -243,10 +243,14 @@ class WebUI:
                         (lesson_start_time, lesson_finish.strftime("%H:%M")))
                 except ValueError:  # Skip invalid time format. This exception can be raised from datetime.datetime.strptime
                     pass
-        self.dbm.update_timetable(new_tmtb)  # Save to databse
-        self.tm.update_timetable()  # Reload timetable in timemanager
-        time_table_display, lessons_cnt = self.parse_timetable()
-        return jsonify({"status": True, "new_time_table": render_template('lessons.html', timetable=time_table_display, lessons_cnt=lessons_cnt)})
+        validation_res = self.dbm.validate_timetable(new_tmtb)
+        if validation_res[0]: # Check for erros(overlaying) in timetable 
+            self.dbm.update_timetable(new_tmtb)  # Save to databse
+            self.tm.update_timetable()  # Reload timetable in timemanager
+            time_table_display, lessons_cnt = self.parse_timetable()
+            return jsonify({"status": True, "new_time_table": render_template('lessons.html', timetable=time_table_display, lessons_cnt=lessons_cnt)})
+        else:
+            return jsonify({"status": False, "lessons": validation_res[1:]})
 
     def get_lesson_data(self):
         lesson_id = int(request.args.get("lesson_id"))
@@ -299,15 +303,14 @@ class WebUI:
         return jsonify({"status": True})
 
     def get_system_info(self):
+        try:
+           response = self.ntc.request(self.ntp_server, version=3)
+           ntp_time = datetime.datetime.fromtimestamp(
+               response.tx_time, pytz.timezone("Europe/Moscow")).strftime("%H:%M:%S")
+        except ntplib.NTPException:
+           ntp_time = "N/A"
         current_time_raw = datetime.datetime.now()
         current_time_fr = current_time_raw.strftime("%H:%M:%S")
-
-        try:
-            response = self.ntc.request(self.ntp_server, version=3)
-            ntp_time = datetime.datetime.fromtimestamp(
-                response.tx_time, pytz.timezone("Europe/Moscow")).strftime("%H:%M:%S")
-        except ntplib.NTPException:
-            ntp_time = "N/A"
         base_data = {"status": True, "server_time": current_time_fr,
                      "ntp_time": ntp_time, "ntp_server": self.ntp_server}
         base_data.update(get_stats())

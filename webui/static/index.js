@@ -138,18 +138,32 @@ settingsModal.addEventListener('hide.bs.modal', function (e) {
     confirmPasswordBlock.style.display = "none";
 });
 
+timetableModal.addEventListener('hide.bs.modal', function (e) {
+    document.getElementById("error_timetable").style.display = 'none';
+});
+
+
 
 document.getElementById("update_timetable_form").addEventListener('submit', function (e) {
     e.preventDefault();
     let api_endpoint = this.getAttribute("action");
-    var formData = new FormData(document.getElementById("update_timetable_form"));
+    let formData = new FormData(document.getElementById("update_timetable_form"));
+    let old_timetable = document.getElementById("timetable_area").innerHTML;
     document.getElementById("timetable_area").innerHTML = `<div class="d-flex justify-content-center">
     <div class="spinner-border" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
 </div>`;
     sendForm(api_endpoint, formData).then(function (resp) {
-        document.getElementById("timetable_area").innerHTML = resp["new_time_table"];
+        if (resp["status"]){
+            document.getElementById("timetable_area").innerHTML = resp["new_time_table"];
+            document.getElementById("error_timetable").style.display = 'none';
+        }else{
+            document.getElementById("timetable_area").innerHTML = old_timetable;
+            document.getElementById("error_timetable").innerText = `Ошибка: накладывание звонков между уроками №${resp["lessons"][0]} и №${resp["lessons"][1]}`;
+            document.getElementById("error_timetable").style.display = 'block';
+        }
+        
     });
 });
 
