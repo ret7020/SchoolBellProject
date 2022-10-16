@@ -60,10 +60,10 @@ The installer script immediately installs nginx, adds it to autoload and applies
 3. WebUI to edit timetable :heavy_check_mark:
 4. WebUI ability to upload melodies :heavy_check_mark:
 5. Adaptive WebUI for smartphones :heavy_check_mark:
-6. Bindings to weekdays(DISABLE bell on Saturday and Sunday)
+6. Bindings to weekdays(DISABLE bell on Saturday and Sunday) :heavy_check_mark:
 7. Design as a REST API application with mostly AJAX WebUI as client :heavy_check_mark:
 8. Create Production Setup :heavy_check_mark:
-9. Create first release (1.0.0)
+9. Create first release (1.0.0) :heavy_check_mark:
 
 ## Screenshots
 ![image](https://user-images.githubusercontent.com/55328925/193130050-b140f16a-6967-4fa3-97ed-22f834dda666.png)

@@ -171,14 +171,22 @@ document.getElementById("update_lesson_form").addEventListener('submit', functio
     e.preventDefault();
     let api_endpoint = this.getAttribute("action");
     var formData = new FormData(document.getElementById("update_lesson_form"));
+    let old_timetable = document.getElementById("timetable_area").innerHTML;
     document.getElementById("timetable_area").innerHTML = `<div class="d-flex justify-content-center">
     <div class="spinner-border" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
 </div>`;
     sendForm(api_endpoint, formData).then(function (resp) {
-        bootstrap.Modal.getInstance(lessonModal).hide();
-        document.getElementById("timetable_area").innerHTML = resp["new_time_table"];
+        if (resp["status"]){
+            bootstrap.Modal.getInstance(lessonModal).hide();
+            document.getElementById("timetable_area").innerHTML = resp["new_time_table"];
+        }else{ // overlay error handler
+            document.getElementById("error_timetable_lesson_modify").innerText = `Ошибка: накладывание звонков между уроками №${resp["lessons"][0]} и №${resp["lessons"][1]}`;;
+            document.getElementById("error_timetable_lesson_modify").style.display = 'block';
+            document.getElementById("timetable_area").innerHTML = old_timetable;
+        }
+        
     });
 });
 

@@ -146,6 +146,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                     <div class="alert alert-danger" role="alert" id="error_timetable_lesson_modify" style="display: none">
+                        Ошибка: N/A
+                    </div>
                     <form action="/api/update_lesson" method="POST" id="update_lesson_form" autocomplete="off">
                         <input type="hidden" name="lesson_id" id="update_lesson_id_hidden">
                         <label for="lessonStart" class="form-label">Время начала</label>
