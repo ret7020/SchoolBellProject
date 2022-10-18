@@ -15,6 +15,8 @@ from models import LoginnedUserModel
 import ntplib
 import pytz
 from stats import get_stats
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 
 class MelodiesStorage:
@@ -41,6 +43,7 @@ class WebUI:
         self.login_manager = LoginManager(self.app)
         self.ntp_server = ntp_server
         self.ntc = ntplib.NTPClient()
+        self.limiter = Limiter(self.app, key_func=get_remote_address)
 
         # Disable requests logging in production mode
         if not dev_mode:
@@ -63,6 +66,7 @@ class WebUI:
         # API routes
 
         @self.app.route('/api/login', methods=['POST'])
+        @self.limiter.limit("10/minute", override_defaults=False) # Bruteforce HTTP level protection
         def __login_api():
             return self.login_api()
 

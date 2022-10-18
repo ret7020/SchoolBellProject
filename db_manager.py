@@ -43,9 +43,9 @@ class Db:
         return [True, 0, 0]
 
     def update_timetable(self, timetable) -> None:
+        self.cursor.execute('DELETE FROM `timetable`')
         self.cursor.execute(
             'UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME="timetable";')
-        self.cursor.execute('DELETE FROM `timetable`')
         for lesson in timetable:
             self.cursor.execute(
                 'INSERT INTO "main"."timetable"("time_start", "time_finish", "melody_id") VALUES (?, ?, ?)', (lesson[0], lesson[1], 1))
