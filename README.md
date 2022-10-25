@@ -30,9 +30,13 @@ Run project<b>(only for current ssh session without autostart)</b></br>
 ```
 ./run.sh
 ```
+</br>
+<b>Default password from admin panel: 12345</b>
+
 ## Production deployment
 ### Autorun on boot
 This is an instruction for systemd systems(systems with systemd as init). In the other cases refer to documentation for your init system.</br>
+<b>If you clone repository in local user(named with pi) folder you will not have to change systemd service config. </b>
 1. Open `./configs/school-bells.service` with `vim`, `nano` or another text editor.
 ```
 vim school-bells.service
@@ -52,6 +56,7 @@ The installer script immediately installs nginx, adds it to autoload and applies
 ### Test final deployment steps
 1. Check web ui on port 80.
 2. Reboot RPi and check autorun on boot
+
 
 ## Development workflow
 ### ToDo
