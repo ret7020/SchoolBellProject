@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash
 import logging
 import datetime
 import os
+import random
 from flask_login import (
     LoginManager,
     current_user,
@@ -29,7 +30,7 @@ class WebUI:
     def __init__(self, name, dbm, tm, aud, melodies_storage, ntp_server, secret_key='DEF_KEY', host='0.0.0.0', port='8080', dev_mode=False):
         self.app = Flask(name, template_folder="webui/templates",
                          static_url_path='/static', static_folder='webui/static')
-        self.app.config['MAX_CONTENT_LENGTH'] = 16 * \
+        self.app.config['MAX_CONTENT_LENGTH'] = 100 * \
             1000 * 1000  # 16 Mb max upload
         # Auto - reload html/css/sources without server reboot
         self.app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -292,6 +293,8 @@ class WebUI:
             if melody_file.filename:
                 if melody_file and self.check_file_extension(melody_file.filename):
                     filename = secure_filename(melody_file.filename)
+                    random_filename_prefix = str(random.randint(10000000000, 100000000000000000000))
+                    filename = f"{random_filename_prefix}{filename}"
                     melody_file.save(os.path.join("./data/sounds", filename))
                     melody_id = self.dbm.add_melody(filename, filename)
                     return jsonify({"status": True, "melody_name": filename, "melody_id": melody_id})
