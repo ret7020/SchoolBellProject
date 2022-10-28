@@ -5,7 +5,7 @@ This is a project to automate the work of school bells. The main features are th
 
 ## Techincal Stack
 #### Hardware
-1. RPi 3B (Or anyanother Raspberry PI or it's copies, like Orange Pi)
+1. RPi 3B (Or any another Raspberry PI or it's copies, like Orange Pi)
 2. 3.5 mm audio system
 #### Backend
 1. Python + Playsound lib

@@ -158,21 +158,38 @@ class WebUI:
         @self.app.route('/api/get_sys')
         @login_required
         def __get_system_info():
+            '''
+            Get current time and NTP time, cpu usage and temp and ram usage
+            '''
             return self.get_system_info()
 
         @self.app.route('/api/get_mute_mode')
         @login_required
         def __get_mute_mode():
+            '''
+            Get data about mute mode
+            '''
             return self.get_mute_mode()
 
         @self.app.route('/api/toggle_mute_mode')
         @login_required
         def __toggle_mute_mode():
+            '''
+            Change mute mode status
+            '''
             return self.change_mute_mode(request.args.get("current_mode"))
+
+        @self.app.route('/api/online')
+        def __online_check():
+            '''
+            Check if bell system works and online(used in global admin panel)
+            '''
+            return self.online_check()
 
         @self.login_manager.user_loader
         def load_user(user_id: str):
             return LoginnedUserModel.get(user_id)
+
 
     def parse_timetable(self):
         '''
@@ -335,6 +352,9 @@ class WebUI:
         else:
             self.dbm.reset_mute_mode()
         return jsonify({"status": True})
+
+    def online_check(self):
+        return jsonify({"status": True, "data": "Alive"})
 
     def run(self):
         self.app.run(host=self.host, port=self.port)
