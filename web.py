@@ -186,6 +186,10 @@ class WebUI:
             '''
             return self.online_check()
 
+        @self.app.route('/api/delete_melody')
+        def __delete_melody():
+            return self.delete_melody(request.args.get("melody_id"))
+
         @self.login_manager.user_loader
         def load_user(user_id: str):
             return LoginnedUserModel.get(user_id)
@@ -351,6 +355,10 @@ class WebUI:
             self.dbm.set_mute_mode()
         else:
             self.dbm.reset_mute_mode()
+        return jsonify({"status": True})
+
+    def delete_melody(self, melody_id):
+        self.dbm.delete_melody(melody_id)
         return jsonify({"status": True})
 
     def online_check(self):

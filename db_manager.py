@@ -1,6 +1,7 @@
 import sqlite3
 from werkzeug.security import check_password_hash, generate_password_hash
 import datetime
+import os
 
 class Db:
     '''
@@ -111,6 +112,12 @@ class Db:
         self.cursor.execute('UPDATE `config` SET `mute_mode` = 0')
         self.connection.commit()
         self.tm.update_timetable()
+
+    def delete_melody(self, melody_id: int) -> None:
+        data = self.cursor.execute('SELECT `filename` FROM `melodies` WHERE `id` = ?', (melody_id, )).fetchone()
+        os.remove(data[0])
+        self.cursor.execute('DELETE FROM `melodies` WHERE `id` = ?', (melody_id, ))
+        self.connection.commit()
 
 if __name__ == "__main__":
     print("[DEBUG] Testing db manager library")
