@@ -42,13 +42,17 @@ class TimeController:
                             else:
                                 bell_status = False  # disable
                         if bell_status:
-                            aud.ring_bell(lesson[6])
+                            if lesson[1] == current_time_fr: # LESSON STARTS
+                                melody = lesson[7]
+                            elif lesson[2] == current_time_fr:
+                                melody = lesson[8]
+                            aud.ring_bell(melody)
 
                         # Sleep for one minute after bell rang. Protect from multiple bells per one minute
                         time.sleep(61 - datetime.datetime.now().second)
         except Exception as e:
             '''
-            Skip temporary exceptions
+            Skip temporary exceptions. To prevent crashes of time manager
             '''
             print(e)  # Dbg
 

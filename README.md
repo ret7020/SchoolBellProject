@@ -69,9 +69,8 @@ The installer script immediately installs nginx, adds it to autoload and applies
 7. Design as a REST API application with mostly AJAX WebUI as client :heavy_check_mark:
 8. Create Production Setup :heavy_check_mark:
 9. Create first release (1.0.0) :heavy_check_mark:
-
-10. Delete melody from list
-11. Modify Lesson start melody and finish melody
+10. Delete melody from list :heavy_check_mark:
+11. Modify Lesson start melody and finish melody 
 
 ## Screenshots
 ![image](https://user-images.githubusercontent.com/55328925/193130050-b140f16a-6967-4fa3-97ed-22f834dda666.png)
