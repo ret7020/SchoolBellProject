@@ -125,7 +125,8 @@ lessonModal.addEventListener('show.bs.modal', function (e) {
         document.getElementById('lessonStartInput').value = resp['lesson_start'];
         document.getElementById('lessonFinishInput').value = resp['lesson_finish'];
         document.getElementById('update_lesson_id_hidden').value = e.relatedTarget.dataset['lesson_id'];
-        document.getElementById('melodySelect').innerHTML = resp['all_melodies'];
+        document.getElementById('melodySelectStart').innerHTML = resp['all_melodies_start'];
+        document.getElementById('melodySelectFinish').innerHTML = resp['all_melodies_finish'];
         document.getElementById("work_at_saturday").checked = resp["saturday_work"];
         document.getElementById("work_at_sunday").checked = resp["sunday_work"];
     });

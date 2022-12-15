@@ -61,7 +61,7 @@ class Db:
             'UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME="timetable";')
         for lesson in timetable:
             self.cursor.execute(
-                'INSERT INTO "main"."timetable"("time_start", "time_finish", "melody_id") VALUES (?, ?, ?)', (lesson[0], lesson[1], 1))
+                'INSERT INTO "main"."timetable"("time_start", "time_finish", "melody_start_id", melody_finish_id) VALUES (?, ?, ?, ?)', (lesson[0], lesson[1], 1, 1))
         self.connection.commit()
         self.tm.update_timetable()
 
@@ -70,9 +70,9 @@ class Db:
             'SELECT * FROM `timetable` WHERE `id` = ?', (lesson_id, )).fetchone()
         return dt
 
-    def update_lesson(self, lesson_id, lesson_start, lesson_finish, melody_id, saturday_work=False, sunday_work=False):
-        self.cursor.execute('UPDATE `timetable` SET `time_start` = ?, `time_finish` = ?, `melody_id` = ?, `saturday_work` = ?, `sunday_work` = ? WHERE `id` = ?',
-                            (lesson_start, lesson_finish, melody_id, saturday_work == "1", sunday_work == "1", lesson_id))
+    def update_lesson(self, lesson_id, lesson_start, lesson_finish, melody_start_id, melody_finish_id, saturday_work=False, sunday_work=False):
+        self.cursor.execute('UPDATE `timetable` SET `time_start` = ?, `time_finish` = ?, `melody_start_id` = ?, `melody_finish_id` = ?, `saturday_work` = ?, `sunday_work` = ? WHERE `id` = ?',
+                            (lesson_start, lesson_finish, melody_start_id, melody_finish_id, saturday_work == "1", sunday_work == "1", lesson_id))
         self.connection.commit()
         self.tm.update_timetable()
 

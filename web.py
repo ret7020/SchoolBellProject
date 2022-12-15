@@ -282,11 +282,11 @@ class WebUI:
         lesson_id = int(request.args.get("lesson_id"))
         dt = self.dbm.get_lesson(lesson_id)
         all_melodies = self.dbm.get_all_melodies()
-        return jsonify({"status": True, "lesson_start": dt[1], "lesson_finish": dt[2], "melody_id": dt[3], "all_melodies": render_template('melodies.html', melodies=all_melodies, selected=dt[3]), "saturday_work": dt[4], "sunday_work": dt[5]})
+        return jsonify({"status": True, "lesson_start": dt[1], "lesson_finish": dt[2], "melody_id": dt[3], "all_melodies_start": render_template('melodies.html', melodies=all_melodies, selected=dt[3]), "all_melodies_finish": render_template('melodies.html', melodies=all_melodies, selected=dt[6]), "saturday_work": dt[4], "sunday_work": dt[5]})
 
     def update_lesson(self):
         self.dbm.update_lesson(int(request.form.get("lesson_id")), request.form.get("lesson-start"), request.form.get("lesson-finish"),
-                               int(request.form.get("melodySelect")), request.form.get("work_at_saturday"), request.form.get("work_at_sunday"))
+                               int(request.form.get("melodySelectStart")), int(request.form.get("melodySelectFinish")), request.form.get("work_at_saturday"), request.form.get("work_at_sunday"))
         self.tm.update_timetable()
         time_table_display, lessons_cnt = self.parse_timetable()
         return jsonify({"status": True, "new_time_table": render_template('lessons.html', timetable=time_table_display, lessons_cnt=lessons_cnt)})
