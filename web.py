@@ -44,7 +44,7 @@ class WebUI:
         self.login_manager = LoginManager(self.app)
         self.ntp_server = ntp_server
         self.ntc = ntplib.NTPClient()
-        self.limiter = Limiter(self.app, key_func=get_remote_address)
+        self.limiter = Limiter(app=self.app, key_func=get_remote_address)
 
         # Disable requests logging in production mode
         if not dev_mode:
@@ -185,6 +185,10 @@ class WebUI:
             Check if bell system works and online(used in global admin panel)
             '''
             return self.online_check()
+    
+        @self.app.route('/api/header_auth')
+        def __header_auth():
+            return self.header_auth()
 
         @self.app.route('/api/delete_melody')
         def __delete_melody():
@@ -193,6 +197,17 @@ class WebUI:
         @self.login_manager.user_loader
         def load_user(user_id: str):
             return LoginnedUserModel.get(user_id)
+
+
+    def header_auth(self):
+        password = request.headers.get("password")
+        if password:
+            correct = self.dbm.check_password(password)
+            if correct:
+                login_user(LoginnedUserModel(1))
+            return jsonify({"status": correct})
+        else:
+            return jsonify({"status": False})
 
 
     def parse_timetable(self):
